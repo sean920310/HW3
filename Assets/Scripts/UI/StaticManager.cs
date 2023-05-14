@@ -26,52 +26,51 @@ public class StaticManager : MonoBehaviour
     [SerializeField] private TextMeshProUGUI P1UnderhandText;
     [SerializeField] private TextMeshProUGUI P2UnderhandText;
 
-    GameManager gameManager;
+    [SerializeField] PlayerInformationManager Player1Info;
+    [SerializeField] PlayerInformationManager Player2Info;
 
     void Start()
     {
-        gameManager = GameManager.instance;
+        P1NameHeader.text = Player1Info.Info.name;
+        P2NameHeader.text = Player2Info.Info.name;
 
-        P1NameHeader.text = gameManager.Player1Info.name;
-        P2NameHeader.text = gameManager.Player2Info.name;
-
-        P1ScoreText.text = gameManager.Player1Info.score.ToString();
-        P2ScoreText.text = gameManager.Player2Info.score.ToString();
-        if (gameManager.Player1Info.score > gameManager.Player2Info.score)
+        P1ScoreText.text = Player1Info.Info.score.ToString();
+        P2ScoreText.text = Player2Info.Info.score.ToString();
+        if (Player1Info.Info.score > Player2Info.Info.score)
             P1ScoreText.color = Color.yellow;
-        else if (gameManager.Player1Info.score < gameManager.Player2Info.score)
+        else if (Player1Info.Info.score < Player2Info.Info.score)
             P2ScoreText.color = Color.yellow;
 
-        P1SmashText.text = gameManager.Player1Info.smashCount.ToString();
-        P2SmashText.text = gameManager.Player2Info.smashCount.ToString();
-        if (gameManager.Player1Info.smashCount > gameManager.Player2Info.smashCount)
+        P1SmashText.text = Player1Info.Info.smashCount.ToString();
+        P2SmashText.text = Player2Info.Info.smashCount.ToString();
+        if (Player1Info.Info.smashCount > Player2Info.Info.smashCount)
             P1SmashText.color = Color.yellow;
-        else if (gameManager.Player1Info.smashCount < gameManager.Player2Info.smashCount)
+        else if (Player1Info.Info.smashCount < Player2Info.Info.smashCount)
             P2SmashText.color = Color.yellow;
 
-        P1DefenseText.text = gameManager.Player1Info.defenceCount.ToString();
-        P2DefenseText.text = gameManager.Player2Info.defenceCount.ToString();
-        if (gameManager.Player1Info.defenceCount > gameManager.Player2Info.defenceCount)
+        P1DefenseText.text = Player1Info.Info.defenceCount.ToString();
+        P2DefenseText.text = Player2Info.Info.defenceCount.ToString();
+        if (Player1Info.Info.defenceCount > Player2Info.Info.defenceCount)
             P1DefenseText.color = Color.yellow;
-        else if (gameManager.Player1Info.defenceCount < gameManager.Player2Info.defenceCount)
+        else if (Player1Info.Info.defenceCount < Player2Info.Info.defenceCount)
             P2DefenseText.color = Color.yellow;
 
-        P1OverhandText.text = gameManager.Player1Info.overhandCount.ToString();
-        P2OverhandText.text = gameManager.Player2Info.overhandCount.ToString();
+        P1OverhandText.text = Player1Info.Info.overhandCount.ToString();
+        P2OverhandText.text = Player2Info.Info.overhandCount.ToString();
 
-        if (gameManager.Player1Info.overhandCount > gameManager.Player2Info.overhandCount)
+        if (Player1Info.Info.overhandCount > Player2Info.Info.overhandCount)
             P1OverhandText.color = Color.yellow;
-        else if (gameManager.Player1Info.overhandCount < gameManager.Player2Info.overhandCount)
+        else if (Player1Info.Info.overhandCount < Player2Info.Info.overhandCount)
             P2OverhandText.color = Color.yellow;
 
-        P1UnderhandText.text = gameManager.Player1Info.underhandCount.ToString();
-        P2UnderhandText.text = gameManager.Player2Info.underhandCount.ToString();
-        if (gameManager.Player1Info.underhandCount > gameManager.Player2Info.underhandCount)
+        P1UnderhandText.text = Player1Info.Info.underhandCount.ToString();
+        P2UnderhandText.text = Player2Info.Info.underhandCount.ToString();
+        if (Player1Info.Info.underhandCount > Player2Info.Info.underhandCount)
             P1UnderhandText.color = Color.yellow;
-        else if (gameManager.Player1Info.underhandCount < gameManager.Player2Info.underhandCount)
+        else if (Player1Info.Info.underhandCount < Player2Info.Info.underhandCount)
             P2UnderhandText.color = Color.yellow;
 
-        winText.text = ((gameManager.Winner == GameManager.Players.Player1) ? gameManager.Player1Info.name : gameManager.Player2Info.name) + " Win!";
+        winText.text = ((GameManager.instance.Winner == GameManager.Players.Player1) ? Player1Info.Info.name : Player2Info.Info.name) + " Win!";
 
     }
 

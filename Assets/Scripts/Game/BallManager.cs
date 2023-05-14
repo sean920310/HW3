@@ -38,8 +38,6 @@ public class BallManager : MonoBehaviour
     [SerializeField] AudioSource SmashSound;
     [SerializeField] AudioSource HittingFloorSound;
 
-    bool isFlyingUp = false;
-
     // Serve State will set to true in GameManager when some one is about to serve.
     public BallStates ballStates = BallStates.Serving;
 
@@ -53,11 +51,16 @@ public class BallManager : MonoBehaviour
 
         Physics.IgnoreLayerCollision(7, 8, true); // Border
         Physics.IgnoreLayerCollision(7, 9, true); // Player
+
+        ballStates = BallStates.Serving;
     }
 
     private void FixedUpdate()
     {
-
+        if(ballStates == BallStates.Serving)
+        {
+            rb.velocity = Vector3.zero;
+        }
     }
 
     private void Update()
@@ -98,17 +101,14 @@ public class BallManager : MonoBehaviour
     private void OnTriggerEnter(Collider other)
     {
         RacketManager racketManager = other.transform.GetComponent<RacketManager>();
+        PlayerInformationManager playerInfo = other.transform.root.GetComponent<PlayerInformationManager>();
         if (racketManager != null)
         {
             rb.velocity = Vector3.zero;
 
             if (racketManager.isSwinDown)
             {
-
-                if (racketManager.transform.root.name == "Player1")
-                    GameManager.instance.Player1Info.underhandCount++;
-                if (racketManager.transform.root.name == "Player2")
-                    GameManager.instance.Player2Info.underhandCount++;
+                playerInfo.Info.underhandCount++;
 
                 // If the previous state was a smash, then this hit should be a defensive shot.
                 if (ballStates == BallStates.Smash)
@@ -118,15 +118,11 @@ public class BallManager : MonoBehaviour
                     rb.AddForce(racketManager.transform.up.normalized * racketManager.defenceHitForce, ForceMode.Impulse);
 
                     if (racketManager.transform.root.name == "Player1")
-                    {
-                        GameManager.instance.Player1Info.defenceCount++;
                         p1StatesPanel.ShowMessageLeft("Defence!!!");
-                    }
-                    if (racketManager.transform.root.name == "Player2")
-                    {
-                        GameManager.instance.Player2Info.defenceCount++;
+                    else
                         p2StatesPanel.ShowMessageRight("Defence!!!");
-                    }
+
+                    playerInfo.Info.defenceCount++;
 
                     trailRenderer.startColor = DefenseTrailColor;
                     DefenseVFX.Play();
@@ -154,15 +150,11 @@ public class BallManager : MonoBehaviour
                     rb.AddForce((-racketManager.transform.up.normalized) * racketManager.powerHitForce, ForceMode.Impulse);
 
                     if (racketManager.transform.root.name == "Player1")
-                    {
                         p1StatesPanel.ShowMessageLeft("Smash!!!");
-                        GameManager.instance.Player1Info.smashCount++;
-                    }
-                    if (racketManager.transform.root.name == "Player2")
-                    {
+                    else
                         p2StatesPanel.ShowMessageRight("Smash!!!");
-                        GameManager.instance.Player2Info.smashCount++;
-                    }
+
+                    playerInfo.Info.smashCount++;
 
                     PowerHitParticle.Play();
                     trailRenderer.startColor = SmashTrailColor;
@@ -170,11 +162,7 @@ public class BallManager : MonoBehaviour
                 }
                 else
                 {
-
-                    if (racketManager.transform.root.name == "Player1")
-                        GameManager.instance.Player1Info.overhandCount++;
-                    if (racketManager.transform.root.name == "Player2")
-                        GameManager.instance.Player2Info.overhandCount++;
+                    playerInfo.Info.overhandCount++;
 
                     // If the previous state was a smash, then this hit should be a defensive shot.
                     if (ballStates == BallStates.Smash)
@@ -184,15 +172,11 @@ public class BallManager : MonoBehaviour
                         rb.AddForce(-racketManager.transform.up.normalized * racketManager.defenceHitForce, ForceMode.Impulse);
 
                         if (racketManager.transform.root.name == "Player1")
-                        {
-                            GameManager.instance.Player1Info.defenceCount++;
                             p1StatesPanel.ShowMessageLeft("Defence!!!");
-                        }
-                        if (racketManager.transform.root.name == "Player2")
-                        {
-                            GameManager.instance.Player2Info.defenceCount++;
+                        else
                             p2StatesPanel.ShowMessageRight("Defence!!!");
-                        }
+
+                        playerInfo.Info.defenceCount++;
 
                         trailRenderer.startColor = DefenseTrailColor;
                         DefenseVFX.Play();

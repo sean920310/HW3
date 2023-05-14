@@ -22,26 +22,6 @@ public class GameManager : MonoBehaviour
         Player2,
         None,
     }
-    [Serializable]
-    public struct PlayerInfo
-    {
-        public string name;
-        public int score;
-        public int smashCount;
-        public int defenceCount;
-        public int overhandCount;
-        public int underhandCount;
-
-        public PlayerInfo(string Name)
-        {
-            this.name = Name;
-            this.score = 0;
-            this.smashCount = 0;
-            this.defenceCount = 0;
-            this.overhandCount = 0;
-            this.underhandCount = 0;
-        }
-    }
 
     public static GameManager instance { get; private set; }
 
@@ -54,6 +34,8 @@ public class GameManager : MonoBehaviour
     [Header("GameObject")]
     [SerializeField] PlayerMovement Player1Movement;
     [SerializeField] PlayerMovement Player2Movement;
+    [SerializeField] PlayerInformationManager Player1Info;
+    [SerializeField] PlayerInformationManager Player2Info;
     [SerializeField] BallManager Ball;
 
     [SerializeField] Transform Player1HatPoint;
@@ -61,9 +43,6 @@ public class GameManager : MonoBehaviour
 
     [SerializeField] GameObject ServeBorderL;
     [SerializeField] GameObject ServeBorderR;
-
-    public PlayerInfo Player1Info = new PlayerInfo("Player1");
-    public PlayerInfo Player2Info = new PlayerInfo("Player2");
 
     [Header("UI")]
     [SerializeField] RectTransform GameoverPanel;
@@ -120,16 +99,16 @@ public class GameManager : MonoBehaviour
 
     private bool CheckIsGameover()
     {
-        return !neverFinish && gameState != GameStates.GameOver && (Player1Info.score >= winScore || Player2Info.score >= winScore);
+        return !neverFinish && gameState != GameStates.GameOver && (Player1Info.Info.score >= winScore || Player2Info.Info.score >= winScore);
     }
 
     public void p1GetPoint()
     {
-        Player1Info.score++;
+        Player1Info.Info.score++;
 
         // UI Update
-        HUD.P1IsAboutToWin = (Player1Info.score == winScore - 1); 
-        HUD.ScorePanelUpdate(Player1Info.score, Player2Info.score);
+        HUD.P1IsAboutToWin = (Player1Info.Info.score == winScore - 1); 
+        HUD.ScorePanelUpdate(Player1Info.Info.score, Player2Info.Info.score);
         HUD.SetServeHint(true, false);
 
         // Set Player State 
@@ -151,11 +130,11 @@ public class GameManager : MonoBehaviour
 
     public void p2GetPoint()
     {
-        Player2Info.score++;
+        Player2Info.Info.score++;
 
         // UI Update
-        HUD.P2IsAboutToWin = (Player2Info.score == winScore - 1);
-        HUD.ScorePanelUpdate(Player1Info.score, Player2Info.score);
+        HUD.P2IsAboutToWin = (Player2Info.Info.score == winScore - 1);
+        HUD.ScorePanelUpdate(Player1Info.Info.score, Player2Info.Info.score);
         HUD.SetServeHint(false, true);
 
         // Set Player State 
@@ -221,14 +200,14 @@ public class GameManager : MonoBehaviour
         Player1Movement.animator.updateMode = AnimatorUpdateMode.UnscaledTime;
         Player2Movement.animator.updateMode = AnimatorUpdateMode.UnscaledTime;
 
-        if (Player1Info.score > Player2Info.score)
+        if (Player1Info.Info.score > Player2Info.Info.score)
         {
             PlayerOneWinSound.Play();
             Winner = Players.Player1;
             Player1Movement.animator.SetTrigger("Dancing1");
             Player2Movement.animator.SetTrigger("Lose");
         }
-        else if (Player1Info.score < Player2Info.score)
+        else if (Player1Info.Info.score < Player2Info.Info.score)
         {
             PlayerTwoWinSound.Play();
             Winner = Players.Player2;
@@ -317,8 +296,8 @@ public class GameManager : MonoBehaviour
             Player2Movement.GetComponent<BotManager>().enabled = true;
 
         // Get Info From Game Start Setting.
-        Player1Info.name = gameStarManager.Player1NameInput.text;
-        Player2Info.name = gameStarManager.Player2NameInput.text;
+        Player1Info.Info.name = gameStarManager.Player1NameInput.text;
+        Player2Info.Info.name = gameStarManager.Player2NameInput.text;
 
         // Set Hat.
         if (CharacterSlot.HatList[CharacterSlot.player1currentHatIdx].hatData.HatPrefab != null)
@@ -358,7 +337,7 @@ public class GameManager : MonoBehaviour
         ServeBorderActive(true);
 
         // HUD Update
-        HUD.ScorePanelUpdate(Player1Info.score, Player2Info.score);
+        HUD.ScorePanelUpdate(Player1Info.Info.score, Player2Info.Info.score);
         HUD.PlayerNameUpdate(Player1Info.name, Player2Info.name);
         HUD.PlayerHatUpdate(CharacterSlot.HatList[CharacterSlot.player1currentHatIdx].hatData.HatSprite,
                             CharacterSlot.HatList[CharacterSlot.player2currentHatIdx].hatData.HatSprite);
