@@ -95,7 +95,7 @@ public class GameManager : MonoBehaviour
 
     void Start()
     {
-        Time.timeScale = 0.0f;
+        //Time.timeScale = 0.0f;
         gameState = GameStates.GamePreparing;
         neverFinish = false;
     }
