@@ -268,6 +268,16 @@ public class PlayerMovement : MonoBehaviour
         swinUpInputFlag = false;
         swinDownInputFlag = false;
     }
+    public void ResetAllAnimatorTriggers()
+    {
+        foreach (var trigger in animator.parameters)
+        {
+            if (trigger.type == AnimatorControllerParameterType.Trigger)
+            {
+                animator.ResetTrigger(trigger.name);
+            }
+        }
+    }
 
     #region Input Handler
     public void OnMove(InputAction.CallbackContext context)
