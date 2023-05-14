@@ -22,11 +22,6 @@ public class BallManager : MonoBehaviour
 
     [SerializeField] Transform centerBorder;
 
-    [SerializeField] bool badmintonSimulation = false;
-    [SerializeField] float velocityDecayMultiplier = 0.99f;
-    [SerializeField] float FlyDownVelocityDecayMultiplier = 0.99f;
-    [SerializeField] float FlyDownVelocityXDecayMultiplier = 0.99f;
-
     // Visual Effect
     [SerializeField] ParticleSystem HitParticle;
     [SerializeField] ParticleSystem PowerHitParticle;
@@ -62,33 +57,12 @@ public class BallManager : MonoBehaviour
 
     private void FixedUpdate()
     {
-        if (badmintonSimulation && isFlyingUp)
-        {
-            rb.velocity *= velocityDecayMultiplier;
-        }
+
     }
 
     private void Update()
     {
         BallInLeftSide = (transform.position.x < centerBorder.transform.position.x);
-
-        if (badmintonSimulation)
-        {
-            if (rb.velocity.y > 0)
-            {
-                isFlyingUp = true;
-            }
-            else
-            {
-                // To simulate badminton physics, reduce the velocity of the shuttle when it transitions from flying upwards to downwards.
-                if (isFlyingUp)
-                {
-                    // Reduce the velocity of the shuttle especially velocity x.
-                    rb.velocity = new Vector3(rb.velocity.x * FlyDownVelocityXDecayMultiplier, rb.velocity.y, rb.velocity.z) * FlyDownVelocityDecayMultiplier;
-                }
-                isFlyingUp = false;
-            }
-        }
 
         transform.rotation = Quaternion.Euler(0, 0, Quaternion.FromToRotation(Vector3.right, rb.velocity).eulerAngles.z);
 

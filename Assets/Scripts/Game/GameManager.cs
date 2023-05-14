@@ -95,7 +95,7 @@ public class GameManager : MonoBehaviour
 
     void Start()
     {
-        Time.timeScale = 0.0f;
+        //Time.timeScale = 0.0f;
         gameState = GameStates.GamePreparing;
         neverFinish = false;
     }
@@ -135,7 +135,7 @@ public class GameManager : MonoBehaviour
         // Set Player State 
         SetServePlayer(Players.Player1);
         playerStatesReset();
-        StartCoroutine(PlayerMovementDisableForAWhile(0.5f));
+        StartCoroutine(PlayerMovementDisableForAWhile(0.4f));
 
         // Set ball Serve State to true
         Ball.ballStates = BallManager.BallStates.Serving;
@@ -161,7 +161,7 @@ public class GameManager : MonoBehaviour
         // Set Player State 
         SetServePlayer(Players.Player2);
         playerStatesReset();
-        StartCoroutine(PlayerMovementDisableForAWhile(0.2f));
+        StartCoroutine(PlayerMovementDisableForAWhile(0.4f));
 
         // Set ball Serve State to true
         Ball.ballStates = BallManager.BallStates.Serving;
@@ -196,6 +196,9 @@ public class GameManager : MonoBehaviour
 
     public void playerStatesReset()
     {
+        Player1Movement.ResetAllAnimatorTriggers();
+        Player2Movement.ResetAllAnimatorTriggers();
+
         Player1Movement.animator.Play("Idle", -1, 0.0f);
         Player2Movement.animator.Play("Idle", -1, 0.0f);
 
@@ -347,12 +350,18 @@ public class GameManager : MonoBehaviour
         Player1Movement.transform.localPosition = new Vector3(-3, 1.06f, 0);
         Player2Movement.transform.localPosition = new Vector3(3, 1.06f, 0);
 
-        StartCoroutine(PlayerMovementDisableForAWhile(0.5f));
+        StartCoroutine(PlayerMovementDisableForAWhile(0.3f));
 
         // Set ball Serve State to true
         Ball.ballStates = BallManager.BallStates.Serving;
 
         ServeBorderActive(true);
+
+        // HUD Update
+        HUD.ScorePanelUpdate(Player1Info.score, Player2Info.score);
+        HUD.PlayerNameUpdate(Player1Info.name, Player2Info.name);
+        HUD.PlayerHatUpdate(CharacterSlot.HatList[CharacterSlot.player1currentHatIdx].hatData.HatSprite,
+                            CharacterSlot.HatList[CharacterSlot.player2currentHatIdx].hatData.HatSprite);
 
         // Check if the game over condition has been satisfied.
         if (CheckIsGameover())
