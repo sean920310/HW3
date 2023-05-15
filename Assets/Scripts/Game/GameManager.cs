@@ -114,7 +114,7 @@ public class GameManager : MonoBehaviour
         // Set Player State 
         SetServePlayer(Players.Player1);
         playerStatesReset();
-        StartCoroutine(PlayerMovementDisableForAWhile(0.4f));
+        StartCoroutine(PlayerMovementDisableForAWhile(0.5f));
 
         // Set ball Serve State to true
         Ball.ballStates = BallManager.BallStates.Serving;
@@ -140,7 +140,7 @@ public class GameManager : MonoBehaviour
         // Set Player State 
         SetServePlayer(Players.Player2);
         playerStatesReset();
-        StartCoroutine(PlayerMovementDisableForAWhile(0.4f));
+        StartCoroutine(PlayerMovementDisableForAWhile(0.5f));
 
         // Set ball Serve State to true
         Ball.ballStates = BallManager.BallStates.Serving;
@@ -264,12 +264,14 @@ public class GameManager : MonoBehaviour
 
     IEnumerator PlayerMovementDisableForAWhile(float delay)
     {
-        Player1Movement.enabled = Player2Movement.enabled = false;
+        Player1Movement.swinDisable();
+        Player2Movement.swinDisable();
         Player1Movement.ResetInputFlag();
         Player2Movement.ResetInputFlag();
 
         yield return new WaitForSeconds(delay);
-        Player1Movement.enabled = Player2Movement.enabled = true;
+        Player1Movement.swinEnable();
+        Player2Movement.swinEnable();
         Player1Movement.ResetInputFlag();
         Player2Movement.ResetInputFlag();
     }

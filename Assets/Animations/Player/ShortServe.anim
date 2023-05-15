@@ -1679,21 +1679,28 @@ AnimationClip:
   m_HasMotionFloatCurves: 0
   m_Events:
   - time: 0
+    functionName: swinDisable
+    data: 
+    objectReferenceParameter: {fileID: 0}
+    floatParameter: 1
+    intParameter: 0
+    messageOptions: 0
+  - time: 0
     functionName: SetRacketColliderOff
     data: 
     objectReferenceParameter: {fileID: 0}
     floatParameter: 0
     intParameter: 0
     messageOptions: 0
-  - time: 0
-    functionName: setHitCoolDown
+  - time: 0.33333334
+    functionName: SetRacketColliderOff
     data: 
     objectReferenceParameter: {fileID: 0}
-    floatParameter: 1
+    floatParameter: 0
     intParameter: 0
     messageOptions: 0
   - time: 0.33333334
-    functionName: setHitCoolDown
+    functionName: swinEnable
     data: 
     objectReferenceParameter: {fileID: 0}
     floatParameter: 0
