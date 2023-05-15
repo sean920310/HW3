@@ -137,6 +137,8 @@ public class PlayerMovement : MonoBehaviour
                 PrepareServe = false;
                 swinUpInputFlag = false;
                 animator.SetBool("ServePrepare", false);
+
+                GameManager.instance.EndServe();
             }
             else if (swinDownInputFlag && hitCoolDownCounter <= 0)
             {
@@ -150,6 +152,8 @@ public class PlayerMovement : MonoBehaviour
                 PrepareServe = false;
                 swinUpInputFlag = false;
                 animator.SetBool("ServePrepare", false);
+
+                GameManager.instance.EndServe();
             }
             return;
         }

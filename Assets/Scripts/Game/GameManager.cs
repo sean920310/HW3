@@ -241,6 +241,7 @@ public class GameManager : MonoBehaviour
         GameoverCheeringSound.Play();
         Time.timeScale = 0.0f;
         HUD.GetComponent<Animator>().SetTrigger("GameEnd");
+        HUD.SetServeHint(false, false);
         GameoverPanel.gameObject.SetActive(true);
 
         Player1Movement.enabled = false;
@@ -287,6 +288,11 @@ public class GameManager : MonoBehaviour
         GameStart();
     }
 
+    public void EndServe()
+    {
+        HUD.SetServeHint(false, false);
+    }
+
     private void GameStart()
     {
         // Get Bot Enable.
@@ -325,6 +331,7 @@ public class GameManager : MonoBehaviour
 
         // Set Player State 
         SetServePlayer(Players.Player1);
+        HUD.SetServeHint(true, false);
 
         Player1Movement.transform.localPosition = new Vector3(-3, 1.06f, 0);
         Player2Movement.transform.localPosition = new Vector3(3, 1.06f, 0);
