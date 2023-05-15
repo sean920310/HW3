@@ -338,7 +338,7 @@ public class GameManager : MonoBehaviour
 
         // HUD Update
         HUD.ScorePanelUpdate(Player1Info.Info.score, Player2Info.Info.score);
-        HUD.PlayerNameUpdate(Player1Info.name, Player2Info.name);
+        HUD.PlayerNameUpdate(Player1Info.Info.name, Player2Info.Info.name);
         HUD.PlayerHatUpdate(CharacterSlot.HatList[CharacterSlot.player1currentHatIdx].hatData.HatSprite,
                             CharacterSlot.HatList[CharacterSlot.player2currentHatIdx].hatData.HatSprite);
 
