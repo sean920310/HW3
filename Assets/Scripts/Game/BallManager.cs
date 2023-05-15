@@ -68,8 +68,8 @@ public class BallManager : MonoBehaviour
         BallInLeftSide = (transform.position.x < centerBorder.transform.position.x);
 
         transform.rotation = Quaternion.Euler(0, 0, Quaternion.FromToRotation(Vector3.right, rb.velocity).eulerAngles.z);
-
     }
+
     public void Serve(bool faceRight, Vector2 ServeDirection, float ServeForce)
     {
 

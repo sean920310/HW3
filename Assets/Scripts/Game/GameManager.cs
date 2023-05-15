@@ -114,7 +114,7 @@ public class GameManager : MonoBehaviour
         // Set Player State 
         SetServePlayer(Players.Player1);
         playerStatesReset();
-        StartCoroutine(PlayerMovementDisableForAWhile(0.4f));
+        StartCoroutine(PlayerMovementDisableForAWhile(0.5f));
 
         // Set ball Serve State to true
         Ball.ballStates = BallManager.BallStates.Serving;
@@ -140,7 +140,7 @@ public class GameManager : MonoBehaviour
         // Set Player State 
         SetServePlayer(Players.Player2);
         playerStatesReset();
-        StartCoroutine(PlayerMovementDisableForAWhile(0.4f));
+        StartCoroutine(PlayerMovementDisableForAWhile(0.5f));
 
         // Set ball Serve State to true
         Ball.ballStates = BallManager.BallStates.Serving;
@@ -241,6 +241,7 @@ public class GameManager : MonoBehaviour
         GameoverCheeringSound.Play();
         Time.timeScale = 0.0f;
         HUD.GetComponent<Animator>().SetTrigger("GameEnd");
+        HUD.SetServeHint(false, false);
         GameoverPanel.gameObject.SetActive(true);
 
         Player1Movement.enabled = false;
@@ -263,12 +264,14 @@ public class GameManager : MonoBehaviour
 
     IEnumerator PlayerMovementDisableForAWhile(float delay)
     {
-        Player1Movement.enabled = Player2Movement.enabled = false;
+        Player1Movement.swinDisable();
+        Player2Movement.swinDisable();
         Player1Movement.ResetInputFlag();
         Player2Movement.ResetInputFlag();
 
         yield return new WaitForSeconds(delay);
-        Player1Movement.enabled = Player2Movement.enabled = true;
+        Player1Movement.swinEnable();
+        Player2Movement.swinEnable();
         Player1Movement.ResetInputFlag();
         Player2Movement.ResetInputFlag();
     }
@@ -285,6 +288,11 @@ public class GameManager : MonoBehaviour
     public void OnStartClick()
     {
         GameStart();
+    }
+
+    public void EndServe()
+    {
+        HUD.SetServeHint(false, false);
     }
 
     private void GameStart()
@@ -325,6 +333,7 @@ public class GameManager : MonoBehaviour
 
         // Set Player State 
         SetServePlayer(Players.Player1);
+        HUD.SetServeHint(true, false);
 
         Player1Movement.transform.localPosition = new Vector3(-3, 1.06f, 0);
         Player2Movement.transform.localPosition = new Vector3(3, 1.06f, 0);
@@ -338,7 +347,7 @@ public class GameManager : MonoBehaviour
 
         // HUD Update
         HUD.ScorePanelUpdate(Player1Info.Info.score, Player2Info.Info.score);
-        HUD.PlayerNameUpdate(Player1Info.name, Player2Info.name);
+        HUD.PlayerNameUpdate(Player1Info.Info.name, Player2Info.Info.name);
         HUD.PlayerHatUpdate(CharacterSlot.HatList[CharacterSlot.player1currentHatIdx].hatData.HatSprite,
                             CharacterSlot.HatList[CharacterSlot.player2currentHatIdx].hatData.HatSprite);
 

@@ -33,11 +33,10 @@ public class PlayerMovement : MonoBehaviour
 
     // Swin
     [Header("Swin")]
-    [SerializeField] float hitCoolDown;
-    float hitCoolDownCounter = 0;
 
     [SerializeField] BallManager ball;
     [SerializeField] RacketManager racket;
+    [SerializeField] public bool CanSwin { get; private set; } = false;
 
     [SerializeField] public bool PrepareServe { get; private set; } = false;
     bool facingRight = false;
@@ -68,41 +67,9 @@ public class PlayerMovement : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        hitCoolDownCounter -= Time.deltaTime;
-
         // Check On Ground
         onGround = Physics.Raycast(GroundChk.position, Vector3.down, 0.02f, WhatIsGround);
         animator.SetBool("OnGround", onGround);
-
-        // Swoop
-        //if (!animator.GetCurrentAnimatorStateInfo(0).IsName("Swoop"))
-        //{
-        //    if (!PrepareServe && onGround)
-        //    {
-        //        if (facingRight && Input.GetKeyDown(KeyCode.Z))
-        //        {
-        //            racket.swoop();
-        //            animator.SetTrigger("Swoop");
-        //            racket.boxColliderEnable();
-        //            rb.velocity = Vector3.zero;
-        //            rb.AddForce(new Vector3(1f, 0.05f, 0f).normalized * 11f, ForceMode.Impulse);
-
-        //        }
-        //        else if(!facingRight && Input.GetKeyDown(KeyCode.M))
-        //        {
-        //            racket.swoop();
-        //            animator.SetTrigger("Swoop");
-        //            racket.boxColliderEnable();
-        //            rb.velocity = Vector3.zero;
-        //            rb.AddForce(new Vector3(-1f, 0.05f, 0f).normalized * 11f, ForceMode.Impulse);
-
-        //        }
-        //    }
-        //}
-        //else
-        //{
-        //    return;
-        //}
 
         // Jump
         // Serving Can't Jump
@@ -125,7 +92,7 @@ public class PlayerMovement : MonoBehaviour
             ball.transform.rotation = LeftHand.rotation;
             ball.rb.velocity = Vector3.zero;
 
-            if (swinUpInputFlag && hitCoolDownCounter <= 0)
+            if (swinUpInputFlag && CanSwin)
             {
                 racket.boxColliderDisable();
 
@@ -137,8 +104,10 @@ public class PlayerMovement : MonoBehaviour
                 PrepareServe = false;
                 swinUpInputFlag = false;
                 animator.SetBool("ServePrepare", false);
+
+                GameManager.instance.EndServe();
             }
-            else if (swinDownInputFlag && hitCoolDownCounter <= 0)
+            else if (swinDownInputFlag && CanSwin)
             {
                 racket.boxColliderDisable();
 
@@ -150,12 +119,14 @@ public class PlayerMovement : MonoBehaviour
                 PrepareServe = false;
                 swinUpInputFlag = false;
                 animator.SetBool("ServePrepare", false);
+
+                GameManager.instance.EndServe();
             }
             return;
         }
-        
+
         // Swing
-        if (swinUpInputFlag && hitCoolDownCounter <= 0)
+        if (swinUpInputFlag && CanSwin)
         {
             swinUpInputFlag = false;
 
@@ -163,7 +134,7 @@ public class PlayerMovement : MonoBehaviour
             animator.SetTrigger("SwingUp");
             racket.swinUp();
         }
-        if (swinDownInputFlag && hitCoolDownCounter <= 0)
+        if (swinDownInputFlag && CanSwin)
         {
             swinDownInputFlag = false;
             SwooshSound.Play();
@@ -197,15 +168,11 @@ public class PlayerMovement : MonoBehaviour
 
     private void FixedUpdate()
     {
-        //if (animator.GetCurrentAnimatorStateInfo(0).IsName("Swoop"))
-        //    return;
-
-
         // Fall Gravity
-        if(enableFallGravityScale)
+        if (enableFallGravityScale)
         {
             Vector3 gravity = gravity = -9.81f * normalGravityScale * Vector3.up;
-            if(!onGround && rb.velocity.y <= 0)
+            if (!onGround && rb.velocity.y <= 0)
             {
                 gravity = -9.81f * fallGravityScale * Vector3.up;
             }
@@ -221,7 +188,7 @@ public class PlayerMovement : MonoBehaviour
             animator.SetBool("Move", false);
 
 
-        if(onGround)
+        if (onGround)
             rb.velocity = new Vector3(movementX * movementSpeed, rb.velocity.y, 0);
         else
             rb.velocity = new Vector3(movementX * airMovementSpeed, rb.velocity.y, 0);
@@ -248,14 +215,16 @@ public class PlayerMovement : MonoBehaviour
         PrepareServe = true;
     }
 
-    void hitCoolDownReset()
+    public void swinDisable()
     {
-        hitCoolDownCounter = hitCoolDown;
+        CanSwin = false;
     }
-    public void setHitCoolDown(float value)
+
+    public void swinEnable()
     {
-        hitCoolDownCounter = value;
+        CanSwin = true;
     }
+
     public void ResetSwinInputFlag()
     {
         swinUpInputFlag = false;
