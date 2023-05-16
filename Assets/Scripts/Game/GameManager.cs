@@ -6,6 +6,7 @@ using UnityEngine.UI;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.Experimental.GlobalIllumination;
+using Photon.Pun;
 
 public class GameManager : MonoBehaviour
 {
@@ -179,11 +180,11 @@ public class GameManager : MonoBehaviour
     {
         if(ServePlayer == Players.Player1)
         {
-            Player1Movement.SetPlayerServe();
+            Player1Movement.SetPlayerServe(true);
         }
         else
         {
-            Player2Movement.SetPlayerServe();
+            Player2Movement.SetPlayerServe(true);
         }
     }
 
@@ -314,6 +315,8 @@ public class GameManager : MonoBehaviour
     public void EndServe()
     {
         HUD.SetServeHint(false, false);
+        Player1Movement.SetPlayerServe(false);
+        Player2Movement.SetPlayerServe(false);
     }
 
     private void GameStart(bool isMultiplayer = false)

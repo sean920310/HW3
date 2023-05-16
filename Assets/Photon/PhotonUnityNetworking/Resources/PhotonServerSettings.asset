@@ -41,6 +41,14 @@ MonoBehaviour:
   - RpcInitBallObject
   - RpcResetVel
   - RpcBallAddForce
+  - RpcBallOnTouchGround
+  - RpcP2GetPoint
+  - RpcP1GetPoint
+  - RpcSetPosition
+  - RpcSetRotation
+  - RpcSetSetVelocity
+  - RpcSetVelocity
+  - RpcEndServe
   DisableAutoOpenWizard: 1
   ShowSettings: 1
   DevRegionSetOnce: 1

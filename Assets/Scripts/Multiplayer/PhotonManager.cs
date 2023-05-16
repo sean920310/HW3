@@ -84,6 +84,21 @@ public class PhotonManager : MonoBehaviourPunCallbacks
 		Application.Quit();
 	}
 
+	public void P1GetPoint()
+    {
+		pv.RPC("RpcP1GetPoint", RpcTarget.All);
+	}
+
+	public void P2GetPoint()
+    {
+		pv.RPC("RpcP2GetPoint", RpcTarget.All);
+	}
+
+	public void EndServe()
+    {
+		pv.RPC("RpcEndServe", RpcTarget.All);
+    }
+
 	#endregion
 
 	#region Private Methods
@@ -128,6 +143,24 @@ public class PhotonManager : MonoBehaviourPunCallbacks
 		bm.p1StatesPanel = p1StatesPanel;
 		bm.p2StatesPanel = p2StatesPanel;
 		bm.centerBorder = centerBorder;
+	}
+
+	[PunRPC]
+	void RpcP1GetPoint(PhotonMessageInfo info)
+	{
+		GameManager.instance.p1GetPoint();
+	}
+
+	[PunRPC]
+	void RpcP2GetPoint(PhotonMessageInfo info)
+    {
+		GameManager.instance.p2GetPoint();
+	}
+
+	[PunRPC]
+	void RpcEndServe(PhotonMessageInfo info)
+	{
+		GameManager.instance.EndServe();
 	}
 
 	#endregion

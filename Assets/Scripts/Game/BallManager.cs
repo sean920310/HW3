@@ -48,9 +48,14 @@ public class BallManager : MonoBehaviour, IPunObservable
 
     private PhotonView pv;
 
-    private void Start()
+    public BallManager()
     {
         Instance = this;
+    }
+
+    private void Start()
+    {
+        //Instance = this;
 
         pv = GetComponent<PhotonView>();
         rb = GetComponent<Rigidbody>();
@@ -81,7 +86,7 @@ public class BallManager : MonoBehaviour, IPunObservable
     public void SwitchState(BallStates state)
     {
         ballStates = state;
-        pv.RPC("RpcUpdateBallState", RpcTarget.Others, (int)state);
+        if(pv) pv.RPC("RpcUpdateBallState", RpcTarget.Others, (int)state);
     }
 
     public bool IsInState(BallStates states)
@@ -98,12 +103,18 @@ public class BallManager : MonoBehaviour, IPunObservable
         if (faceRight)
         {
             ServeDirection = new Vector2(Mathf.Abs(ServeDirection.x), Mathf.Abs(ServeDirection.y));
-            rb.AddForce( ServeDirection.normalized * ServeForce, ForceMode.Impulse);
+            if (pv)
+                pv.RPC("RpcBallAddForce", RpcTarget.MasterClient, (Vector3)ServeDirection.normalized * ServeForce);
+            else
+                rb.AddForce( ServeDirection.normalized * ServeForce, ForceMode.Impulse);
         }
         else
         {
             ServeDirection = new Vector2(-Mathf.Abs(ServeDirection.x), Mathf.Abs(ServeDirection.y));
-            rb.AddForce( ServeDirection.normalized * ServeForce, ForceMode.Impulse);
+            if (pv)
+                pv.RPC("RpcBallAddForce", RpcTarget.MasterClient, (Vector3)ServeDirection.normalized * ServeForce);
+            else
+                rb.AddForce( ServeDirection.normalized * ServeForce, ForceMode.Impulse);
 
         }
 
@@ -117,17 +128,26 @@ public class BallManager : MonoBehaviour, IPunObservable
 
     public void SetPosition(Vector3 pos)
     {
-        transform.position = pos;
+        if (pv)
+            pv.RPC("RpcSetPosition", RpcTarget.MasterClient, pos);
+        else
+            transform.position = pos;
     }
 
     public void SetRotation(Quaternion rot)
     {
-        transform.rotation = rot;
+        if (pv)
+            pv.RPC("RpcSetRotation", RpcTarget.MasterClient, rot);
+        else
+            transform.rotation = rot;
     }
 
     public void SetVelocity(Vector3 vel)
     {
-        rb.velocity = vel;
+        if (pv)
+            pv.RPC("RpcSetVelocity", RpcTarget.MasterClient, vel);
+        else
+            rb.velocity = vel;
     }
 
 
@@ -140,7 +160,7 @@ public class BallManager : MonoBehaviour, IPunObservable
         {
             if (other.transform.root.GetComponent<PhotonView>() && !other.transform.root.GetComponent<PhotonView>().IsMine) return;
             rb.velocity = Vector3.zero;
-            pv.RPC("RpcResetVel", RpcTarget.All);
+            if(pv) pv.RPC("RpcResetVel", RpcTarget.All);
 
             if (racketManager.isSwinDown)
             {
@@ -255,23 +275,38 @@ public class BallManager : MonoBehaviour, IPunObservable
     // Hit Floor
     private void OnCollisionEnter(Collision collision)
     {
+        if (pv && !PhotonNetwork.IsMasterClient) return;
         if(ballStates != BallStates.Serving && collision.transform.tag == "Ground")
         {
             SwitchState(BallStates.Serving);
 
             if (collision.gameObject.name == "Player2Floor")
             {
-                GameManager.instance.p1GetPoint();
+                if (pv)
+                    PhotonManager.Instance.P1GetPoint();
+                else
+                    GameManager.instance.p1GetPoint();
             }
             else if (collision.gameObject.name == "Player1Floor")
             {
-                GameManager.instance.p2GetPoint();
+                if (pv)
+                    PhotonManager.Instance.P2GetPoint();
+                else
+                    GameManager.instance.p2GetPoint();
             }
 
-            trailRenderer.startColor = NormalTrailColor;
-            trailRenderer.enabled = false;
-            HittingFloorSound.Play();
+            if (pv)
+                pv.RPC("RpcBallOnTouchGround", RpcTarget.All);
+            else
+                OnTouchGround();
         }
+    }
+
+    void OnTouchGround()
+    {
+        trailRenderer.startColor = NormalTrailColor;
+        trailRenderer.enabled = false;
+        HittingFloorSound.Play();
     }
 
     public void OnPhotonSerializeView(PhotonStream stream, PhotonMessageInfo info)
@@ -311,6 +346,30 @@ public class BallManager : MonoBehaviour, IPunObservable
     void RpcBallAddForce(Vector3 force, PhotonMessageInfo info)
     {
         rb.AddForce(force, ForceMode.Impulse);
+    }
+
+    [PunRPC]
+    void RpcBallOnTouchGround(PhotonMessageInfo info)
+    {
+        OnTouchGround();
+    }
+
+    [PunRPC]
+    void RpcSetPosition(Vector3 pos, PhotonMessageInfo info)
+    {
+        transform.position = pos;
+    }
+
+    [PunRPC]
+    void RpcSetRotation(Quaternion rot, PhotonMessageInfo info)
+    {
+        transform.rotation = rot;
+    }
+
+    [PunRPC]
+    void RpcSetVelocity(Vector3 vel, PhotonMessageInfo info)
+    {
+        rb.velocity = vel;
     }
 
     #endregion

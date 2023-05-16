@@ -111,6 +111,8 @@ public class PlayerMovement : MonoBehaviour
                     animator.SetBool("ServePrepare", false);
 
                     GameManager.instance.EndServe();
+                    if(PhotonManager.Instance)
+                        PhotonManager.Instance.EndServe();
                 }
                 else if (swinDownInputFlag && CanSwin)
                 {
@@ -126,6 +128,8 @@ public class PlayerMovement : MonoBehaviour
                     animator.SetBool("ServePrepare", false);
 
                     GameManager.instance.EndServe();
+                    if(PhotonManager.Instance)
+                        PhotonManager.Instance.EndServe();
                 }
                 return;
             }
@@ -220,9 +224,9 @@ public class PlayerMovement : MonoBehaviour
         racket.setTrailOff();
     }
 
-    public void SetPlayerServe()
+    public void SetPlayerServe(bool serve)
     {
-        PrepareServe = true;
+        PrepareServe = serve;
     }
 
     public void swinDisable()
