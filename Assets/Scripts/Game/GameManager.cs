@@ -32,14 +32,9 @@ public class GameManager : MonoBehaviour
     [SerializeField] bool neverFinish; // Endless if true
 
     [Header("GameObject")]
-    [SerializeField] PlayerMovement Player1Movement;
-    [SerializeField] PlayerMovement Player2Movement;
-    [SerializeField] PlayerInformationManager Player1Info;
-    [SerializeField] PlayerInformationManager Player2Info;
-    [SerializeField] BallManager Ball;
-
-    [SerializeField] Transform Player1HatPoint;
-    [SerializeField] Transform Player2HatPoint;
+    [SerializeField] public GameObject Player1;
+    [SerializeField] public GameObject Player2;
+    //[SerializeField] BallManager Ball;
 
     [SerializeField] GameObject ServeBorderL;
     [SerializeField] GameObject ServeBorderR;
@@ -59,7 +54,16 @@ public class GameManager : MonoBehaviour
     [SerializeField] Light directionalLight;
     [SerializeField] Light spotLight;
 
+    public bool isMultiplayer = false;
+
     public Players Winner { get; private set; } = Players.None;
+
+    private PlayerMovement Player1Movement;
+    private PlayerMovement Player2Movement;
+    private PlayerInformationManager Player1Info;
+    private PlayerInformationManager Player2Info;
+    private Transform Player1HatPoint;
+    private Transform Player2HatPoint;
 
     private void Awake()
     {
@@ -74,6 +78,20 @@ public class GameManager : MonoBehaviour
 
     void Start()
     {
+        //get component
+        if(Player1)
+        {
+            Player1Movement = Player1.GetComponent<PlayerMovement>();
+            Player1Info = Player1.GetComponent<PlayerInformationManager>();
+            Player1HatPoint = Player1.transform.Find("Body/Neck/Head/HatPoint");
+        }
+        if (Player2)
+        {
+            Player2Movement = Player2.GetComponent<PlayerMovement>();
+            Player2Info = Player2.GetComponent<PlayerInformationManager>();
+            Player2HatPoint = Player2.transform.Find("Body/Neck/Head/HatPoint");
+        }
+
         //Time.timeScale = 0.0f;
         gameState = GameStates.GamePreparing;
         neverFinish = false;
@@ -91,9 +109,12 @@ public class GameManager : MonoBehaviour
             }
         }
 
-        if (!Player1Movement.PrepareServe && !Player2Movement.PrepareServe)
+        if(Player1Movement && Player2Movement)
         {
-            ServeBorderActive(false);
+            if (!Player1Movement.PrepareServe && !Player2Movement.PrepareServe)
+            {
+                ServeBorderActive(false);
+            }
         }
     }
 
@@ -117,7 +138,7 @@ public class GameManager : MonoBehaviour
         StartCoroutine(PlayerMovementDisableForAWhile(0.5f));
 
         // Set ball Serve State to true
-        Ball.ballStates = BallManager.BallStates.Serving;
+        BallManager.Instance.SwitchState(BallManager.BallStates.Serving);
 
         ServeBorderActive(true);
 
@@ -143,7 +164,7 @@ public class GameManager : MonoBehaviour
         StartCoroutine(PlayerMovementDisableForAWhile(0.5f));
 
         // Set ball Serve State to true
-        Ball.ballStates = BallManager.BallStates.Serving;
+        BallManager.Instance.SwitchState(BallManager.BallStates.Serving);
 
         ServeBorderActive(true);
 
@@ -239,7 +260,7 @@ public class GameManager : MonoBehaviour
         }
 
         GameoverCheeringSound.Play();
-        Time.timeScale = 0.0f;
+        //Time.timeScale = 0.0f;
         HUD.GetComponent<Animator>().SetTrigger("GameEnd");
         HUD.SetServeHint(false, false);
         GameoverPanel.gameObject.SetActive(true);
@@ -251,7 +272,7 @@ public class GameManager : MonoBehaviour
     public void Pause()
     {
         gameState = GameStates.GamePause;
-        Time.timeScale = 0.0f;
+        //Time.timeScale = 0.0f;
         PausePanel.gameObject.SetActive(true);
     }
 
@@ -295,8 +316,21 @@ public class GameManager : MonoBehaviour
         HUD.SetServeHint(false, false);
     }
 
-    private void GameStart()
+    private void GameStart(bool isMultiplayer = false)
     {
+        if (Player1)
+        {
+            Player1Movement = Player1.GetComponent<PlayerMovement>();
+            Player1Info = Player1.GetComponent<PlayerInformationManager>();
+            Player1HatPoint = Player1.transform.Find("Body/Neck/Head/HatPoint");
+        }
+        if (Player2)
+        {
+            Player2Movement = Player2.GetComponent<PlayerMovement>();
+            Player2Info = Player2.GetComponent<PlayerInformationManager>();
+            Player2HatPoint = Player2.transform.Find("Body/Neck/Head/HatPoint");
+        }
+
         // Get Bot Enable.
         if (gameStarManager.P1BotToggle.isOn)    
             Player1Movement.GetComponent<BotManager>().enabled = true;
@@ -329,7 +363,7 @@ public class GameManager : MonoBehaviour
 
         Player1Movement.gameObject.SetActive(true);
         Player2Movement.gameObject.SetActive(true);
-        Ball.gameObject.SetActive(true);
+        BallManager.Instance.gameObject.SetActive(true);
 
         // Set Player State 
         SetServePlayer(Players.Player1);
@@ -341,7 +375,7 @@ public class GameManager : MonoBehaviour
         StartCoroutine(PlayerMovementDisableForAWhile(0.3f));
 
         // Set ball Serve State to true
-        Ball.ballStates = BallManager.BallStates.Serving;
+        BallManager.Instance.SwitchState(BallManager.BallStates.Serving);
 
         ServeBorderActive(true);
 

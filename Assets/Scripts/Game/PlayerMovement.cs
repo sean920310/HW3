@@ -5,6 +5,7 @@ using UnityEngine.Animations;
 using UnityEngine.Animations.Rigging;
 using UnityEngine.InputSystem;
 using UnityEngine.VFX;
+using Photon.Pun;
 
 public class PlayerMovement : MonoBehaviour
 {
@@ -33,8 +34,6 @@ public class PlayerMovement : MonoBehaviour
 
     // Swin
     [Header("Swin")]
-
-    [SerializeField] BallManager ball;
     [SerializeField] RacketManager racket;
     [SerializeField] public bool CanSwin { get; private set; } = false;
 
@@ -47,8 +46,12 @@ public class PlayerMovement : MonoBehaviour
     [ReadOnly] public bool swinUpInputFlag = false;
     [ReadOnly] public bool swinDownInputFlag = false;
 
+    //Pun
+    PhotonView pv;
+
     void Start()
     {
+        pv = GetComponent<PhotonView>();
         animator = GetComponent<Animator>();
         rb = GetComponent<Rigidbody>();
         if (enableFallGravityScale)
@@ -67,131 +70,138 @@ public class PlayerMovement : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        // Check On Ground
-        onGround = Physics.Raycast(GroundChk.position, Vector3.down, 0.02f, WhatIsGround);
-        animator.SetBool("OnGround", onGround);
-
-        // Jump
-        // Serving Can't Jump
-        if (!PrepareServe && jumpInputFlag && onGround)
+        if(!pv || pv.IsMine)
         {
-            rb.AddForce(Vector3.up * jumpForce, ForceMode.Impulse);
-            jumpInputFlag = false;
-        }
+            // Check On Ground
+            onGround = Physics.Raycast(GroundChk.position, Vector3.down, 0.02f, WhatIsGround);
+            animator.SetBool("OnGround", onGround);
 
-        // Serve
-        if (PrepareServe)
-        {
-            // Set Serve Animation
-            if (!animator.GetCurrentAnimatorStateInfo(0).IsName("ServePrepare"))
+            // Jump
+            // Serving Can't Jump
+            if (!PrepareServe && jumpInputFlag && onGround)
             {
-                animator.SetBool("ServePrepare", true);
+                rb.AddForce(Vector3.up * jumpForce, ForceMode.Impulse);
+                jumpInputFlag = false;
             }
 
-            ball.transform.position = LeftHand.position;
-            ball.transform.rotation = LeftHand.rotation;
-            ball.rb.velocity = Vector3.zero;
+            // Serve
+            if (PrepareServe)
+            {
+                // Set Serve Animation
+                if (!animator.GetCurrentAnimatorStateInfo(0).IsName("ServePrepare"))
+                {
+                    animator.SetBool("ServePrepare", true);
+                }
 
+                BallManager.Instance.SetPosition(LeftHand.position);
+                BallManager.Instance.SetRotation(LeftHand.rotation);
+                BallManager.Instance.SetVelocity(Vector3.zero);
+
+                if (swinUpInputFlag && CanSwin)
+                {
+                    racket.boxColliderDisable();
+
+                    SwooshSound.Play();
+                    animator.SetTrigger("LongServe");
+
+                    BallManager.Instance.Serve(facingRight, racket.LongServeDirection, racket.LongServeForce);
+
+                    PrepareServe = false;
+                    swinUpInputFlag = false;
+                    animator.SetBool("ServePrepare", false);
+
+                    GameManager.instance.EndServe();
+                }
+                else if (swinDownInputFlag && CanSwin)
+                {
+                    racket.boxColliderDisable();
+
+                    SwooshSound.Play();
+                    animator.SetTrigger("ShortServe");
+
+                    BallManager.Instance.Serve(facingRight, racket.ShortServeDirection, racket.ShortServeForce);
+
+                    PrepareServe = false;
+                    swinUpInputFlag = false;
+                    animator.SetBool("ServePrepare", false);
+
+                    GameManager.instance.EndServe();
+                }
+                return;
+            }
+
+            // Swing
             if (swinUpInputFlag && CanSwin)
             {
-                racket.boxColliderDisable();
+                swinUpInputFlag = false;
 
                 SwooshSound.Play();
-                animator.SetTrigger("LongServe");
-
-                ball.Serve(facingRight, racket.LongServeDirection, racket.LongServeForce);
-
-                PrepareServe = false;
-                swinUpInputFlag = false;
-                animator.SetBool("ServePrepare", false);
-
-                GameManager.instance.EndServe();
+                animator.SetTrigger("SwingUp");
+                racket.swinUp();
             }
-            else if (swinDownInputFlag && CanSwin)
+            if (swinDownInputFlag && CanSwin)
             {
-                racket.boxColliderDisable();
-
+                swinDownInputFlag = false;
                 SwooshSound.Play();
-                animator.SetTrigger("ShortServe");
 
-                ball.Serve(facingRight, racket.ShortServeDirection, racket.ShortServeForce);
-
-                PrepareServe = false;
-                swinUpInputFlag = false;
-                animator.SetBool("ServePrepare", false);
-
-                GameManager.instance.EndServe();
-            }
-            return;
-        }
-
-        // Swing
-        if (swinUpInputFlag && CanSwin)
-        {
-            swinUpInputFlag = false;
-
-            SwooshSound.Play();
-            animator.SetTrigger("SwingUp");
-            racket.swinUp();
-        }
-        if (swinDownInputFlag && CanSwin)
-        {
-            swinDownInputFlag = false;
-            SwooshSound.Play();
-
-            // SwinDown Type Detection: Front Ball SwingDownFront, vice versa.
-            if (facingRight)
-            {
-                if (ball.transform.position.x - transform.position.x <= 0.2f)
+                // SwinDown Type Detection: Front Ball SwingDownFront, vice versa.
+                if (facingRight)
                 {
-                    animator.SetTrigger("SwingDownBack");
+                    if (BallManager.Instance.transform.position.x - transform.position.x <= 0.2f)
+                    {
+                        animator.SetTrigger("SwingDownBack");
+                    }
+                    else
+                    {
+                        animator.SetTrigger("SwingDownFront");
+                    }
                 }
                 else
                 {
-                    animator.SetTrigger("SwingDownFront");
+                    if (BallManager.Instance.transform.position.x - transform.position.x >= 0.2f)
+                    {
+                        animator.SetTrigger("SwingDownBack");
+                    }
+                    else
+                    {
+                        animator.SetTrigger("SwingDownFront");
+                    }
                 }
+                racket.swinDown();
             }
-            else
-            {
-                if (ball.transform.position.x - transform.position.x >= 0.2f)
-                {
-                    animator.SetTrigger("SwingDownBack");
-                }
-                else
-                {
-                    animator.SetTrigger("SwingDownFront");
-                }
-            }
-            racket.swinDown();
+
         }
     }
 
     private void FixedUpdate()
     {
-        // Fall Gravity
-        if (enableFallGravityScale)
+        if (!pv || pv.IsMine)
         {
-            Vector3 gravity = gravity = -9.81f * normalGravityScale * Vector3.up;
-            if (!onGround && rb.velocity.y <= 0)
+            // Fall Gravity
+            if (enableFallGravityScale)
             {
-                gravity = -9.81f * fallGravityScale * Vector3.up;
+                Vector3 gravity = gravity = -9.81f * normalGravityScale * Vector3.up;
+                if (!onGround && rb.velocity.y <= 0)
+                {
+                    gravity = -9.81f * fallGravityScale * Vector3.up;
+                }
+                rb.AddForce(gravity, ForceMode.Acceleration);
             }
-            rb.AddForce(gravity, ForceMode.Acceleration);
+
+            // Movement
+            float movementX = moveInputFlag;
+
+            if (Mathf.Abs(movementX) > 0f)
+                animator.SetBool("Move", true);
+            else
+                animator.SetBool("Move", false);
+
+
+            if (onGround)
+                rb.velocity = new Vector3(movementX * movementSpeed, rb.velocity.y, 0);
+            else
+                rb.velocity = new Vector3(movementX * airMovementSpeed, rb.velocity.y, 0);
         }
-
-        // Movement
-        float movementX = moveInputFlag;
-
-        if (Mathf.Abs(movementX) > 0f)
-            animator.SetBool("Move", true);
-        else
-            animator.SetBool("Move", false);
-
-
-        if (onGround)
-            rb.velocity = new Vector3(movementX * movementSpeed, rb.velocity.y, 0);
-        else
-            rb.velocity = new Vector3(movementX * airMovementSpeed, rb.velocity.y, 0);
     }
 
     // This SetRacketColliderOff is for animation event

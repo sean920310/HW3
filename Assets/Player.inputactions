@@ -220,6 +220,34 @@
                     "isPartOfComposite": false
                 }
             ]
+        },
+        {
+            "name": "MultiPlayer",
+            "id": "b5aa4df5-3e90-4f9b-8e78-0dd209b1e028",
+            "actions": [
+                {
+                    "name": "New action",
+                    "type": "Button",
+                    "id": "94beb159-5d96-47d8-ad51-1095f5561120",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                }
+            ],
+            "bindings": [
+                {
+                    "name": "",
+                    "id": "2717883e-ec66-48a3-81cb-c3a4fb1ecfd7",
+                    "path": "",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "New action",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                }
+            ]
         }
     ],
     "controlSchemes": []

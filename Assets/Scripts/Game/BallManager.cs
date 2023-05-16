@@ -2,9 +2,12 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.VFX;
+using Photon.Pun;
 
 public class BallManager : MonoBehaviour
 {
+    static public BallManager Instance;
+
     public enum BallStates
     {
         Serving,
@@ -17,10 +20,10 @@ public class BallManager : MonoBehaviour
     public Rigidbody rb;
     [SerializeField] Transform centerOfMass;
 
-    [SerializeField] StatesPanel p1StatesPanel;
-    [SerializeField] StatesPanel p2StatesPanel;
+    [SerializeField] public StatesPanel p1StatesPanel;
+    [SerializeField] public StatesPanel p2StatesPanel;
 
-    [SerializeField] Transform centerBorder;
+    [SerializeField] public Transform centerBorder;
 
     // Visual Effect
     [SerializeField] ParticleSystem HitParticle;
@@ -39,12 +42,17 @@ public class BallManager : MonoBehaviour
     [SerializeField] AudioSource HittingFloorSound;
 
     // Serve State will set to true in GameManager when some one is about to serve.
-    public BallStates ballStates = BallStates.Serving;
+    [ReadOnly] [SerializeField] private BallStates ballStates = BallStates.Serving;
 
     public bool BallInLeftSide { get; private set; }
 
+    private PhotonView pv;
+
     private void Start()
     {
+        Instance = this;
+
+        pv = GetComponent<PhotonView>();
         rb = GetComponent<Rigidbody>();
         trailRenderer = GetComponent<TrailRenderer>();
         rb.centerOfMass = centerOfMass.position;
@@ -70,10 +78,20 @@ public class BallManager : MonoBehaviour
         transform.rotation = Quaternion.Euler(0, 0, Quaternion.FromToRotation(Vector3.right, rb.velocity).eulerAngles.z);
     }
 
+    public void SwitchState(BallStates state)
+    {
+        ballStates = state;
+        pv.RPC("RpcUpdateBallState", RpcTarget.Others, (int)state);
+    }
+
+    public bool IsInState(BallStates states)
+    {
+        return ballStates == states;
+    }
+
     public void Serve(bool faceRight, Vector2 ServeDirection, float ServeForce)
     {
-
-        ballStates = BallStates.NormalHit;
+        SwitchState(BallStates.NormalHit);
 
         rb.velocity = Vector3.zero;
 
@@ -97,6 +115,22 @@ public class BallManager : MonoBehaviour
 
     }
 
+    public void SetPosition(Vector3 pos)
+    {
+        transform.position = pos;
+    }
+
+    public void SetRotation(Quaternion rot)
+    {
+        transform.rotation = rot;
+    }
+
+    public void SetVelocity(Vector3 vel)
+    {
+        rb.velocity = vel;
+    }
+
+
     // Hit Racket
     private void OnTriggerEnter(Collider other)
     {
@@ -104,7 +138,9 @@ public class BallManager : MonoBehaviour
         PlayerInformationManager playerInfo = other.transform.root.GetComponent<PlayerInformationManager>();
         if (racketManager != null)
         {
+            if (other.transform.root.GetComponent<PhotonView>() && !other.transform.root.GetComponent<PhotonView>().IsMine) return;
             rb.velocity = Vector3.zero;
+            pv.RPC("RpcResetVel", RpcTarget.All);
 
             if (racketManager.isSwinDown)
             {
@@ -113,9 +149,12 @@ public class BallManager : MonoBehaviour
                 // If the previous state was a smash, then this hit should be a defensive shot.
                 if (ballStates == BallStates.Smash)
                 {
-                    ballStates = BallStates.Defense;
+                    SwitchState(BallStates.Defense);
 
-                    rb.AddForce(racketManager.transform.up.normalized * racketManager.defenceHitForce, ForceMode.Impulse);
+                    if(pv)
+                        pv.RPC("RpcBallAddForce", RpcTarget.MasterClient, racketManager.transform.up.normalized * racketManager.defenceHitForce);
+                    else
+                        rb.AddForce(racketManager.transform.up.normalized * racketManager.defenceHitForce, ForceMode.Impulse);
 
                     if (racketManager.transform.root.name == "Player1")
                         p1StatesPanel.ShowMessageLeft("Defence!!!");
@@ -130,9 +169,12 @@ public class BallManager : MonoBehaviour
                 }
                 else
                 {
-                    ballStates = BallStates.NormalHit;
+                    SwitchState(BallStates.NormalHit);
 
-                    rb.AddForce(racketManager.transform.up.normalized * racketManager.swinDownForce, ForceMode.Impulse);
+                    if (pv)
+                        pv.RPC("RpcBallAddForce", RpcTarget.MasterClient, racketManager.transform.up.normalized * racketManager.swinDownForce);
+                    else
+                        rb.AddForce(racketManager.transform.up.normalized * racketManager.swinDownForce, ForceMode.Impulse);
 
                     trailRenderer.startColor = NormalTrailColor;
                     HitSound.Play();
@@ -145,9 +187,12 @@ public class BallManager : MonoBehaviour
                 if ((360 >= hittingAngle.z && hittingAngle.z >= 170 || 10 >= hittingAngle.z && hittingAngle.z >= 0) && 
                     !racketManager.transform.root.GetComponent<PlayerMovement>().onGround)
                 {
-                    ballStates = BallStates.Smash;
+                    SwitchState(BallStates.Smash);
 
-                    rb.AddForce((-racketManager.transform.up.normalized) * racketManager.powerHitForce, ForceMode.Impulse);
+                    if (pv)
+                        pv.RPC("RpcBallAddForce", RpcTarget.MasterClient, (-racketManager.transform.up.normalized) * racketManager.powerHitForce);
+                    else
+                        rb.AddForce((-racketManager.transform.up.normalized) * racketManager.powerHitForce, ForceMode.Impulse);
 
                     if (racketManager.transform.root.name == "Player1")
                         p1StatesPanel.ShowMessageLeft("Smash!!!");
@@ -167,9 +212,12 @@ public class BallManager : MonoBehaviour
                     // If the previous state was a smash, then this hit should be a defensive shot.
                     if (ballStates == BallStates.Smash)
                     {
-                        ballStates = BallStates.Defense;
+                        SwitchState(BallStates.Defense);
 
-                        rb.AddForce(-racketManager.transform.up.normalized * racketManager.defenceHitForce, ForceMode.Impulse);
+                        if (pv)
+                            pv.RPC("RpcBallAddForce", RpcTarget.MasterClient, -racketManager.transform.up.normalized * racketManager.defenceHitForce);
+                        else
+                            rb.AddForce(-racketManager.transform.up.normalized * racketManager.defenceHitForce, ForceMode.Impulse);
 
                         if (racketManager.transform.root.name == "Player1")
                             p1StatesPanel.ShowMessageLeft("Defence!!!");
@@ -184,9 +232,12 @@ public class BallManager : MonoBehaviour
                     }
                     else
                     {
-                        ballStates = BallStates.NormalHit;
+                        SwitchState(BallStates.NormalHit);
 
-                        rb.AddForce(-racketManager.transform.up.normalized * racketManager.hitForce, ForceMode.Impulse);
+                        if (pv)
+                            pv.RPC("RpcBallAddForce", RpcTarget.MasterClient, -racketManager.transform.up.normalized * racketManager.hitForce);
+                        else
+                            rb.AddForce(-racketManager.transform.up.normalized * racketManager.hitForce, ForceMode.Impulse);
 
                         trailRenderer.startColor = NormalTrailColor;
                         HitSound.Play();
@@ -206,7 +257,7 @@ public class BallManager : MonoBehaviour
     {
         if(ballStates != BallStates.Serving && collision.transform.tag == "Ground")
         {
-            ballStates = BallStates.Serving;
+            SwitchState(BallStates.Serving);
 
             if (collision.gameObject.name == "Player2Floor")
             {
@@ -222,4 +273,26 @@ public class BallManager : MonoBehaviour
             HittingFloorSound.Play();
         }
     }
+
+    #region PunRPC
+
+    [PunRPC]
+    void RpcUpdateBallState(int state, PhotonMessageInfo info)
+    {
+        ballStates = (BallStates)state;
+    }
+
+    [PunRPC]
+    void RpcResetVel(PhotonMessageInfo info)
+    {
+        rb.velocity = Vector3.zero;
+    }
+
+    [PunRPC]
+    void RpcBallAddForce(Vector3 force, PhotonMessageInfo info)
+    {
+        rb.AddForce(force, ForceMode.Impulse);
+    }
+
+    #endregion
 }
