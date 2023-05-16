@@ -118,11 +118,18 @@ public class BallManager : MonoBehaviour, IPunObservable
 
         }
 
-
-        trailRenderer.enabled = true;
-        HitParticle.Play();
-
-        HitSound.Play();
+        if (pv)
+        {
+            pv.RPC("RpcNormalHit", RpcTarget.All);
+            pv.RPC("RpcOnHit", RpcTarget.All);
+        }
+        else
+        {
+            trailRenderer.startColor = NormalTrailColor;
+            trailRenderer.enabled = true;
+            HitSound.Play();
+            HitParticle.Play();
+        }
 
     }
 
@@ -178,13 +185,19 @@ public class BallManager : MonoBehaviour, IPunObservable
 
                     if (racketManager.transform.root.name == "Player1")
                         p1StatesPanel.ShowMessageLeft("Defence!!!");
-                    else
+                    else if (racketManager.transform.root.name == "Player2")
                         p2StatesPanel.ShowMessageRight("Defence!!!");
 
                     playerInfo.Info.defenceCount++;
 
-                    trailRenderer.startColor = DefenseTrailColor;
-                    DefenseVFX.Play();
+                    if (pv)
+                        pv.RPC("RpcDefenceHit", RpcTarget.All, PhotonNetwork.IsMasterClient);
+                    else
+                    {
+                        trailRenderer.startColor = DefenseTrailColor;
+                        DefenseVFX.Play();
+                        HitSound.Play();
+                    }
 
                 }
                 else
@@ -196,8 +209,13 @@ public class BallManager : MonoBehaviour, IPunObservable
                     else
                         rb.AddForce(racketManager.transform.up.normalized * racketManager.swinDownForce, ForceMode.Impulse);
 
-                    trailRenderer.startColor = NormalTrailColor;
-                    HitSound.Play();
+                    if (pv)
+                        pv.RPC("RpcNormalHit", RpcTarget.All);
+                    else
+                    {
+                        trailRenderer.startColor = NormalTrailColor;
+                        HitSound.Play();
+                    }
                 }
             }
             else
@@ -216,14 +234,19 @@ public class BallManager : MonoBehaviour, IPunObservable
 
                     if (racketManager.transform.root.name == "Player1")
                         p1StatesPanel.ShowMessageLeft("Smash!!!");
-                    else
+                    else if (racketManager.transform.root.name == "Player2")
                         p2StatesPanel.ShowMessageRight("Smash!!!");
 
                     playerInfo.Info.smashCount++;
 
-                    PowerHitParticle.Play();
-                    trailRenderer.startColor = SmashTrailColor;
-                    SmashSound.Play();
+                    if (pv)
+                        pv.RPC("RpcSmashHit", RpcTarget.All, PhotonNetwork.IsMasterClient);
+                    else
+                    {
+                        PowerHitParticle.Play();
+                        trailRenderer.startColor = SmashTrailColor;
+                        SmashSound.Play();
+                    }
                 }
                 else
                 {
@@ -241,13 +264,19 @@ public class BallManager : MonoBehaviour, IPunObservable
 
                         if (racketManager.transform.root.name == "Player1")
                             p1StatesPanel.ShowMessageLeft("Defence!!!");
-                        else
+                        else if (racketManager.transform.root.name == "Player2")
                             p2StatesPanel.ShowMessageRight("Defence!!!");
 
                         playerInfo.Info.defenceCount++;
 
-                        trailRenderer.startColor = DefenseTrailColor;
-                        DefenseVFX.Play();
+                        if (pv)
+                            pv.RPC("RpcDefenceHit", RpcTarget.All, PhotonNetwork.IsMasterClient);
+                        else
+                        {
+                            trailRenderer.startColor = DefenseTrailColor;
+                            DefenseVFX.Play();
+                            HitSound.Play();
+                        }
 
                     }
                     else
@@ -259,16 +288,26 @@ public class BallManager : MonoBehaviour, IPunObservable
                         else
                             rb.AddForce(-racketManager.transform.up.normalized * racketManager.hitForce, ForceMode.Impulse);
 
-                        trailRenderer.startColor = NormalTrailColor;
-                        HitSound.Play();
+                        if (pv)
+                            pv.RPC("RpcNormalHit", RpcTarget.All);
+                        else
+                        {
+                            trailRenderer.startColor = NormalTrailColor;
+                            HitSound.Play();
+                        }
                     }
                 }
             }
 
             racketManager.boxColliderDisable();
 
-            trailRenderer.enabled = true;
-            HitParticle.Play();
+            if (pv)
+                pv.RPC("RpcOnHit", RpcTarget.All);
+            else
+            {
+                trailRenderer.enabled = true;
+                HitParticle.Play();
+            }
         }
     }
 
@@ -372,5 +411,43 @@ public class BallManager : MonoBehaviour, IPunObservable
         rb.velocity = vel;
     }
 
+    [PunRPC]
+    void RpcNormalHit(PhotonMessageInfo info)
+    {
+        trailRenderer.startColor = NormalTrailColor;
+        HitSound.Play();
+    }
+
+    [PunRPC]
+    void RpcSmashHit(bool player1, PhotonMessageInfo info)
+    {
+        if (player1)
+            p1StatesPanel.ShowMessageLeft("Smash!!!");
+        else
+            p2StatesPanel.ShowMessageRight("Smash!!!"); 
+        PowerHitParticle.Play();
+        trailRenderer.startColor = SmashTrailColor;
+        SmashSound.Play();
+    }
+
+    [PunRPC]
+    void RpcDefenceHit(bool player1, PhotonMessageInfo info)
+    {
+        if (player1)
+            p1StatesPanel.ShowMessageLeft("Defence!!!");
+        else
+            p2StatesPanel.ShowMessageRight("Defence!!!"); 
+
+        trailRenderer.startColor = DefenseTrailColor;
+        DefenseVFX.Play();
+        HitSound.Play();
+    }
+
+    [PunRPC]
+    void RpcOnHit(PhotonMessageInfo info)
+    {
+        trailRenderer.enabled = true;
+        HitParticle.Play();
+    }
     #endregion
 }

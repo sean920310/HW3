@@ -49,6 +49,11 @@ MonoBehaviour:
   - RpcSetSetVelocity
   - RpcSetVelocity
   - RpcEndServe
+  - RpcNormalHit
+  - RpcDeffenceHit
+  - RpcSmashHit
+  - RpcDefenceHit
+  - RpcOnHit
   DisableAutoOpenWizard: 1
   ShowSettings: 1
   DevRegionSetOnce: 1
