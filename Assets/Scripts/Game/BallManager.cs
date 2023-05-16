@@ -86,6 +86,7 @@ public class BallManager : MonoBehaviour, IPunObservable
     public void SwitchState(BallStates state)
     {
         ballStates = state;
+        if(pv) pv.RPC("RpcUpdateBallState", RpcTarget.Others, (int)state);
     }
 
     public bool IsInState(BallStates states)
@@ -354,14 +355,12 @@ public class BallManager : MonoBehaviour, IPunObservable
             stream.SendNext(rb.position);
             stream.SendNext(rb.rotation);
             stream.SendNext(rb.velocity);
-            stream.SendNext(ballStates);
         }
         else
         {
             rb.position = (Vector3)stream.ReceiveNext();
             rb.rotation = (Quaternion)stream.ReceiveNext();
             rb.velocity = (Vector3)stream.ReceiveNext();
-            ballStates = (BallStates)stream.ReceiveNext();
 
             float lag = Mathf.Abs((float)(PhotonNetwork.Time - info.timestamp));
             rb.position += rb.velocity * lag;
@@ -369,6 +368,12 @@ public class BallManager : MonoBehaviour, IPunObservable
     }
 
     #region PunRPC
+
+    [PunRPC]
+    void RpcUpdateBallState(int state, PhotonMessageInfo info)
+    {
+        ballStates = (BallStates)state;
+    }
 
     [PunRPC]
     void RpcResetVel(PhotonMessageInfo info)
