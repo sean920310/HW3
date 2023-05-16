@@ -8,7 +8,6 @@ public class MultiplayerManager : MonoBehaviour ,IPunInstantiateMagicCallback
     // Start is called before the first frame update
     void Start()
     {
-        
     }
 
     // Update is called once per frame
@@ -43,4 +42,5 @@ public class MultiplayerManager : MonoBehaviour ,IPunInstantiateMagicCallback
             }
         }
     }
+
 }

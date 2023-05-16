@@ -103,6 +103,7 @@ public class PlayerMovement : MonoBehaviour
 
                     SwooshSound.Play();
                     animator.SetTrigger("LongServe");
+                    if (pv) pv.RPC("RpcAnimTrigger", RpcTarget.Others, "LongServe");
 
                     BallManager.Instance.Serve(facingRight, racket.LongServeDirection, racket.LongServeForce);
 
@@ -120,6 +121,7 @@ public class PlayerMovement : MonoBehaviour
 
                     SwooshSound.Play();
                     animator.SetTrigger("ShortServe");
+                    if (pv) pv.RPC("RpcAnimTrigger", RpcTarget.Others, "ShortServe");
 
                     BallManager.Instance.Serve(facingRight, racket.ShortServeDirection, racket.ShortServeForce);
 
@@ -141,6 +143,7 @@ public class PlayerMovement : MonoBehaviour
 
                 SwooshSound.Play();
                 animator.SetTrigger("SwingUp");
+                if (pv) pv.RPC("RpcAnimTrigger", RpcTarget.Others, "SwingUp");
                 racket.swinUp();
             }
             if (swinDownInputFlag && CanSwin)
@@ -154,10 +157,12 @@ public class PlayerMovement : MonoBehaviour
                     if (BallManager.Instance.transform.position.x - transform.position.x <= 0.2f)
                     {
                         animator.SetTrigger("SwingDownBack");
+                        if (pv) pv.RPC("RpcAnimTrigger", RpcTarget.Others, "SwingDownBack");
                     }
                     else
                     {
                         animator.SetTrigger("SwingDownFront");
+                        if (pv) pv.RPC("RpcAnimTrigger", RpcTarget.Others, "SwingDownFront");
                     }
                 }
                 else
@@ -165,10 +170,12 @@ public class PlayerMovement : MonoBehaviour
                     if (BallManager.Instance.transform.position.x - transform.position.x >= 0.2f)
                     {
                         animator.SetTrigger("SwingDownBack");
+                        if (pv) pv.RPC("RpcAnimTrigger", RpcTarget.Others, "SwingDownBack");
                     }
                     else
                     {
                         animator.SetTrigger("SwingDownFront");
+                        if (pv) pv.RPC("RpcAnimTrigger", RpcTarget.Others, "SwingDownFront");
                     }
                 }
                 racket.swinDown();
@@ -296,4 +303,16 @@ public class PlayerMovement : MonoBehaviour
             swinDownInputFlag = false;
     }
     #endregion
+
+
+    #region PunRPC
+
+    [PunRPC]
+    void RpcAnimTrigger(string param, PhotonMessageInfo info)
+    {
+        animator.SetTrigger(param);
+    }
+
+    #endregion
+
 }
