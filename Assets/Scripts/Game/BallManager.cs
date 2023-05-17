@@ -167,7 +167,11 @@ public class BallManager : MonoBehaviour, IPunObservable
         {
             if (other.transform.root.GetComponent<PhotonView>() && !other.transform.root.GetComponent<PhotonView>().IsMine) return;
             rb.velocity = Vector3.zero;
-            if(pv) pv.RPC("RpcResetVel", RpcTarget.All);
+            if (pv)
+            {
+                pv.RPC("RpcResetVel", RpcTarget.All);
+                PhotonNetwork.SendAllOutgoingCommands();
+            }
 
             if (racketManager.isSwinDown)
             {
@@ -179,7 +183,10 @@ public class BallManager : MonoBehaviour, IPunObservable
                     SwitchState(BallStates.Defense);
 
                     if(pv)
+                    {
                         pv.RPC("RpcBallAddForce", RpcTarget.MasterClient, racketManager.transform.up.normalized * racketManager.defenceHitForce);
+                        PhotonNetwork.SendAllOutgoingCommands();
+                    }
                     else
                         rb.AddForce(racketManager.transform.up.normalized * racketManager.defenceHitForce, ForceMode.Impulse);
 
@@ -205,7 +212,10 @@ public class BallManager : MonoBehaviour, IPunObservable
                     SwitchState(BallStates.NormalHit);
 
                     if (pv)
+                    {
                         pv.RPC("RpcBallAddForce", RpcTarget.MasterClient, racketManager.transform.up.normalized * racketManager.swinDownForce);
+                        PhotonNetwork.SendAllOutgoingCommands();
+                    }
                     else
                         rb.AddForce(racketManager.transform.up.normalized * racketManager.swinDownForce, ForceMode.Impulse);
 
@@ -228,7 +238,10 @@ public class BallManager : MonoBehaviour, IPunObservable
                     SwitchState(BallStates.Smash);
 
                     if (pv)
+                    {
                         pv.RPC("RpcBallAddForce", RpcTarget.MasterClient, (-racketManager.transform.up.normalized) * racketManager.powerHitForce);
+                        PhotonNetwork.SendAllOutgoingCommands();
+                    }
                     else
                         rb.AddForce((-racketManager.transform.up.normalized) * racketManager.powerHitForce, ForceMode.Impulse);
 
@@ -258,7 +271,10 @@ public class BallManager : MonoBehaviour, IPunObservable
                         SwitchState(BallStates.Defense);
 
                         if (pv)
+                        {
                             pv.RPC("RpcBallAddForce", RpcTarget.MasterClient, -racketManager.transform.up.normalized * racketManager.defenceHitForce);
+                            PhotonNetwork.SendAllOutgoingCommands();
+                        }
                         else
                             rb.AddForce(-racketManager.transform.up.normalized * racketManager.defenceHitForce, ForceMode.Impulse);
 
@@ -284,7 +300,10 @@ public class BallManager : MonoBehaviour, IPunObservable
                         SwitchState(BallStates.NormalHit);
 
                         if (pv)
+                        {
                             pv.RPC("RpcBallAddForce", RpcTarget.MasterClient, -racketManager.transform.up.normalized * racketManager.hitForce);
+                            PhotonNetwork.SendAllOutgoingCommands();
+                        }
                         else
                             rb.AddForce(-racketManager.transform.up.normalized * racketManager.hitForce, ForceMode.Impulse);
 
