@@ -57,6 +57,16 @@ MonoBehaviour:
   - AnimTrigger
   - RpcAnimTrigger
   - RpcAnimBool
+  - RpcP1NameChange
+  - RpcP2NameChange
+  - RpcP1HatChange
+  - RpcP2HatChange
+  - RpcP2Ready
+  - RpcP1Ready
+  - RpcNextBtn
+  - RpcScoreChange
+  - RpcBackBtn
+  - RpcStartBtn
   DisableAutoOpenWizard: 1
   ShowSettings: 1
   DevRegionSetOnce: 1
