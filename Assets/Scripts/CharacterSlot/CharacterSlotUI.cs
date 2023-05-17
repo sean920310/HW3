@@ -8,15 +8,16 @@ public class CharacterSlotUI : MonoBehaviour
     [SerializeField] Image sprite;
     [SerializeField] Button LeftButton;
     [SerializeField] Button RightButton;
+    bool canChange = true;
 
     private void Start()
     {
-
+        
     }
 
     public void UIUpdate(int idx)
     {
-        if(idx == 0)
+        if (idx == 0)
         {
             LeftButton.gameObject.SetActive(false);
         }
@@ -41,6 +42,17 @@ public class CharacterSlotUI : MonoBehaviour
         }
         else
             sprite.color = new Color(0,0,0,0);
+
+
+        if (!canChange)
+        {
+            LeftButton.gameObject.SetActive(false);
+            RightButton.gameObject.SetActive(false);
+        }
     }
 
+    public void SetActive(bool value)
+    {
+        canChange = value;
+    }
 }

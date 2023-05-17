@@ -10,8 +10,8 @@ public class CharacterSlot : MonoBehaviour
     [SerializeField] public static int player1currentHatIdx;
     [SerializeField] public static int player2currentHatIdx;
 
-    [SerializeField] CharacterSlotUI p1SlotUI;
-    [SerializeField] CharacterSlotUI p2SlotUI;
+    [SerializeField] public CharacterSlotUI p1SlotUI;
+    [SerializeField] public CharacterSlotUI p2SlotUI;
 
     private void Start()
     {
@@ -74,6 +74,12 @@ public class CharacterSlot : MonoBehaviour
             p2SlotUI.UIUpdate(player2currentHatIdx);
         }
 
+    }
+
+    public void UpdateUI()
+    {
+        p1SlotUI.UIUpdate(player1currentHatIdx);
+        p2SlotUI.UIUpdate(player2currentHatIdx);
     }
 }
 

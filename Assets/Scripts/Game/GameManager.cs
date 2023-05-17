@@ -301,15 +301,20 @@ public class GameManager : MonoBehaviour
     #region Button_Event
     public void OnQuitClick()
     {
-        Application.Quit();
+        SceneManager.LoadScene(0);
     }
     public void OnRematchClick()
     {
-        SceneManager.LoadScene(0);
+        SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
     }
     public void OnStartClick()
     {
         GameStart();
+    }
+
+    public void MultiplayerStart()
+    {
+        GameStart(true);
     }
 
     public void EndServe()
@@ -335,9 +340,9 @@ public class GameManager : MonoBehaviour
         }
 
         // Get Bot Enable.
-        if (gameStarManager.P1BotToggle.isOn)    
+        if (!isMultiplayer && gameStarManager.P1BotToggle.isOn)    
             Player1Movement.GetComponent<BotManager>().enabled = true;
-        if (gameStarManager.P2BotToggle.isOn)
+        if (!isMultiplayer && gameStarManager.P2BotToggle.isOn)
             Player2Movement.GetComponent<BotManager>().enabled = true;
 
         // Get Info From Game Start Setting.

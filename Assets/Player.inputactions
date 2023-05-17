@@ -222,13 +222,13 @@
             ]
         },
         {
-            "name": "MultiPlayer",
-            "id": "b5aa4df5-3e90-4f9b-8e78-0dd209b1e028",
+            "name": "PlayerRebinding",
+            "id": "3c239952-da50-4967-9414-2e900f850bb1",
             "actions": [
                 {
                     "name": "New action",
                     "type": "Button",
-                    "id": "94beb159-5d96-47d8-ad51-1095f5561120",
+                    "id": "8a0ffbbe-e09c-4022-8c52-6d068bdd4cb7",
                     "expectedControlType": "Button",
                     "processors": "",
                     "interactions": "",
@@ -238,7 +238,7 @@
             "bindings": [
                 {
                     "name": "",
-                    "id": "2717883e-ec66-48a3-81cb-c3a4fb1ecfd7",
+                    "id": "b66c5355-2112-4f6c-a5fd-74dbee225c18",
                     "path": "",
                     "interactions": "",
                     "processors": "",
