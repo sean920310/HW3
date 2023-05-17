@@ -168,7 +168,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   containerRect: {fileID: 1407806550736918862}
   handleRect: {fileID: 3199668076469712368}
-  joystickRange: 100
+  joystickRange: 1
   magnitudeMultiplier: 1
   invertXOutputValue: 0
   invertYOutputValue: 0
