@@ -1165,13 +1165,8 @@ MonoBehaviour:
   gameState: 0
   winScore: 0
   neverFinish: 0
-  Player1Movement: {fileID: 909109875199266210}
-  Player2Movement: {fileID: 758331621}
-  Player1Info: {fileID: 909109875199266209}
-  Player2Info: {fileID: 758331622}
-  Ball: {fileID: 796490629}
-  Player1HatPoint: {fileID: 909109875199266208}
-  Player2HatPoint: {fileID: 758331620}
+  Player1: {fileID: 846389454}
+  Player2: {fileID: 1728282798}
   ServeBorderL: {fileID: 468233089}
   ServeBorderR: {fileID: 257269076}
   GameoverPanel: {fileID: 877779759}
@@ -1183,6 +1178,7 @@ MonoBehaviour:
   GameoverCheeringSound: {fileID: 234814730}
   directionalLight: {fileID: 1161708845}
   spotLight: {fileID: 2101688609}
+  isMultiplayer: 0
 --- !u!4 &234814729
 Transform:
   m_ObjectHideFlags: 0
@@ -18439,17 +18435,12 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 9e2eed9e40515104c849495e5e39059b, type: 3}
---- !u!4 &758331620 stripped
-Transform:
-  m_CorrespondingSourceObject: {fileID: 3097128635166130281, guid: 9e2eed9e40515104c849495e5e39059b, type: 3}
-  m_PrefabInstance: {fileID: 758331619}
-  m_PrefabAsset: {fileID: 0}
 --- !u!114 &758331621 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 1117428462548657271, guid: 9e2eed9e40515104c849495e5e39059b, type: 3}
   m_PrefabInstance: {fileID: 758331619}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
+  m_GameObject: {fileID: 1728282798}
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 5ba488f35b29822408c7e6ac632ed3fb, type: 3}
@@ -18460,7 +18451,7 @@ MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 8690316878104910752, guid: 9e2eed9e40515104c849495e5e39059b, type: 3}
   m_PrefabInstance: {fileID: 758331619}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
+  m_GameObject: {fileID: 1728282798}
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 847354486634de24985240b0ee772d52, type: 3}
@@ -30931,6 +30922,11 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1719544581}
   m_CullTransparentMesh: 1
+--- !u!1 &1728282798 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 909109874194044293, guid: 9e2eed9e40515104c849495e5e39059b, type: 3}
+  m_PrefabInstance: {fileID: 758331619}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &1750053061
 GameObject:
   m_ObjectHideFlags: 0
@@ -34882,11 +34878,6 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 9e2eed9e40515104c849495e5e39059b, type: 3}
---- !u!4 &909109875199266208 stripped
-Transform:
-  m_CorrespondingSourceObject: {fileID: 3097128635166130281, guid: 9e2eed9e40515104c849495e5e39059b, type: 3}
-  m_PrefabInstance: {fileID: 909109875199266207}
-  m_PrefabAsset: {fileID: 0}
 --- !u!114 &909109875199266209 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 8690316878104910752, guid: 9e2eed9e40515104c849495e5e39059b, type: 3}
