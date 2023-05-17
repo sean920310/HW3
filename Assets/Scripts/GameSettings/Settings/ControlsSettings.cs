@@ -44,6 +44,16 @@ public class ControlsSettings : MonoBehaviour
         UpdateKeyText();
     }
 
+    public void OnEnable()
+    {
+        LoadBinding();
+        UpdateKeyText();
+    }
+    public void OnDisable()
+    {
+        SaveBinding();
+    }
+
     #region Button Event
 
     public void RebindingP1MoveLeft()
