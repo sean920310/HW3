@@ -315,4 +315,26 @@ public class PlayerMovement : MonoBehaviour
 
     #endregion
 
+
+    #region Mobile Input Handler
+
+    public void OnMove(Vector2 value)
+    {
+        moveInputFlag = value.x;
+    }
+    public void OnJump(bool value)
+    {
+        jumpInputFlag = value;
+    }
+    public void OnSwinUp(bool value)
+    {
+        swinUpInputFlag = value;
+    }
+    public void OnSwinDown(bool value)
+    {
+        swinDownInputFlag = value;
+    }
+
+    #endregion
+
 }
