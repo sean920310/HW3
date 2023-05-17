@@ -23,8 +23,6 @@ public class GameSettingsManager : MonoBehaviour
     public GameSettingsData settingsData;
     private FileDataHandler dataHandler;
 
-    [SerializeField] private TextMeshProUGUI textMeshProUGUI;
-
     private void Awake()
     {
 

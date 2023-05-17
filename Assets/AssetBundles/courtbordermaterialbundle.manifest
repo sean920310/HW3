@@ -1,21 +1,19 @@
 ManifestFileVersion: 0
-CRC: 577387867
+CRC: 648356060
 Hashes:
   AssetFileHash:
     serializedVersion: 2
-    Hash: d283826794cce281d67e5a62a9a723e5
+    Hash: 5ac67d77a9a9f28eed1c4500f42dc300
   TypeTreeHash:
     serializedVersion: 2
-    Hash: f9f3d136959ac0e7043e721e899342fb
+    Hash: 1397ad235555a4f37791d5b3ff19e7a7
 HashAppended: 0
 ClassTypes:
 - Class: 21
-  Script: {instanceID: 0}
-- Class: 28
   Script: {instanceID: 0}
 - Class: 48
   Script: {instanceID: 0}
 SerializeReferenceClassIdentifiers: []
 Assets:
-- Assets/BundleAssets/CourtBorderMaterialBundle/BorderMaterial.mat
+- Assets/BundleAssets/CourtBorderMaterialBundle/Normal/BorderMaterial.mat
 Dependencies: []

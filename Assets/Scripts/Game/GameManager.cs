@@ -301,11 +301,11 @@ public class GameManager : MonoBehaviour
     #region Button_Event
     public void OnQuitClick()
     {
-        Application.Quit();
+        SceneManager.LoadScene(0);
     }
     public void OnRematchClick()
     {
-        SceneManager.LoadScene(0);
+        SceneManager.LoadScene(1);
     }
     public void OnStartClick()
     {
