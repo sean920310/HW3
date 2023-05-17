@@ -36,6 +36,27 @@ MonoBehaviour:
   RpcList:
   - ClickRpc
   - DestroyRpc
+  - RpcSendPlayerGameObject
+  - RpcUpdateBallState
+  - RpcInitBallObject
+  - RpcResetVel
+  - RpcBallAddForce
+  - RpcBallOnTouchGround
+  - RpcP2GetPoint
+  - RpcP1GetPoint
+  - RpcSetPosition
+  - RpcSetRotation
+  - RpcSetSetVelocity
+  - RpcSetVelocity
+  - RpcEndServe
+  - RpcNormalHit
+  - RpcDeffenceHit
+  - RpcSmashHit
+  - RpcDefenceHit
+  - RpcOnHit
+  - AnimTrigger
+  - RpcAnimTrigger
+  - RpcAnimBool
   DisableAutoOpenWizard: 1
   ShowSettings: 1
   DevRegionSetOnce: 1

@@ -10,6 +10,7 @@ public class PlayerInformationManager : MonoBehaviour
     {
         public string name;
         public int score;
+        public int game;
         public int smashCount;
         public int defenceCount;
         public int overhandCount;
@@ -19,6 +20,7 @@ public class PlayerInformationManager : MonoBehaviour
         {
             this.name = Name;
             this.score = 0;
+            this.game = 0;
             this.smashCount = 0;
             this.defenceCount = 0;
             this.overhandCount = 0;

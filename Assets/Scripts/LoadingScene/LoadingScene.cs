@@ -12,17 +12,18 @@ public class LoadingScene : MonoBehaviour
 
     public void LoadScene(int sceneID)
     {
+        loadingScreen.SetActive(true);
         StartCoroutine(LoadSceneAsync(sceneID));
     }
 
     public void MuliplayerLoadScene(int sceneID)
     {
+        loadingScreen.SetActive(true);
         StartCoroutine(MuliplayerLoadSceneAsync(sceneID));
     }
 
     IEnumerator LoadSceneAsync(int sceneID)
     {
-        loadingScreen.SetActive(true);
         //yield return new WaitForSeconds(2f);
 
         AsyncOperation operation = SceneManager.LoadSceneAsync(sceneID);
@@ -39,8 +40,7 @@ public class LoadingScene : MonoBehaviour
 
     IEnumerator MuliplayerLoadSceneAsync(int sceneID)
     {
-        loadingScreen.SetActive(true);
-        //yield return new WaitForSeconds(2f);
+        yield return new WaitForSeconds(1f);
 
         PhotonNetwork.LoadLevel(1);
 

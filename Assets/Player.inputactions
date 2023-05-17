@@ -6,15 +6,6 @@
             "id": "2caf4f75-51bf-48a1-a74d-22522ef59f06",
             "actions": [
                 {
-                    "name": "Jump",
-                    "type": "Button",
-                    "id": "603dafc6-e037-4e2e-abb2-ba1f93828575",
-                    "expectedControlType": "Button",
-                    "processors": "",
-                    "interactions": "",
-                    "initialStateCheck": false
-                },
-                {
                     "name": "Movement",
                     "type": "Value",
                     "id": "fc0e2bca-026e-4397-96ab-da6d5cbad091",
@@ -22,6 +13,15 @@
                     "processors": "",
                     "interactions": "",
                     "initialStateCheck": true
+                },
+                {
+                    "name": "Jump",
+                    "type": "Button",
+                    "id": "603dafc6-e037-4e2e-abb2-ba1f93828575",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
                 },
                 {
                     "name": "SwinUp",
@@ -45,12 +45,23 @@
             "bindings": [
                 {
                     "name": "",
-                    "id": "328dbd19-65d9-409d-8821-7d4d3914e999",
-                    "path": "<Keyboard>/s",
+                    "id": "04a13fe0-c133-401c-8d60-bf7fbda95ce5",
+                    "path": "<Keyboard>/q",
                     "interactions": "",
                     "processors": "",
                     "groups": "",
-                    "action": "Jump",
+                    "action": "SwinUp",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "c73ace4e-35a1-410c-b3a4-4a31c85513a3",
+                    "path": "<Keyboard>/e",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "SwinDown",
                     "isComposite": false,
                     "isPartOfComposite": false
                 },
@@ -89,23 +100,12 @@
                 },
                 {
                     "name": "",
-                    "id": "04a13fe0-c133-401c-8d60-bf7fbda95ce5",
-                    "path": "<Keyboard>/q",
+                    "id": "328dbd19-65d9-409d-8821-7d4d3914e999",
+                    "path": "<Keyboard>/s",
                     "interactions": "",
                     "processors": "",
                     "groups": "",
-                    "action": "SwinUp",
-                    "isComposite": false,
-                    "isPartOfComposite": false
-                },
-                {
-                    "name": "",
-                    "id": "c73ace4e-35a1-410c-b3a4-4a31c85513a3",
-                    "path": "<Keyboard>/e",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": "",
-                    "action": "SwinDown",
+                    "action": "Jump",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }
@@ -116,9 +116,18 @@
             "id": "72a82849-3a1c-471d-8504-c1491cd3905a",
             "actions": [
                 {
-                    "name": "SwinDown",
+                    "name": "Movement",
+                    "type": "Value",
+                    "id": "5b047ed3-ed0d-4cfc-b9c1-b28f19a77505",
+                    "expectedControlType": "Axis",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": true
+                },
+                {
+                    "name": "Jump",
                     "type": "Button",
-                    "id": "5454c448-0edd-4954-8c7f-743655616d49",
+                    "id": "f9e311e7-64e5-4fdd-8410-6bc3298559bb",
                     "expectedControlType": "Button",
                     "processors": "",
                     "interactions": "",
@@ -134,18 +143,9 @@
                     "initialStateCheck": false
                 },
                 {
-                    "name": "Movement",
-                    "type": "Value",
-                    "id": "5b047ed3-ed0d-4cfc-b9c1-b28f19a77505",
-                    "expectedControlType": "Axis",
-                    "processors": "",
-                    "interactions": "",
-                    "initialStateCheck": true
-                },
-                {
-                    "name": "Jump",
+                    "name": "SwinDown",
                     "type": "Button",
-                    "id": "f9e311e7-64e5-4fdd-8410-6bc3298559bb",
+                    "id": "5454c448-0edd-4954-8c7f-743655616d49",
                     "expectedControlType": "Button",
                     "processors": "",
                     "interactions": "",
@@ -216,6 +216,34 @@
                     "processors": "",
                     "groups": "",
                     "action": "SwinDown",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                }
+            ]
+        },
+        {
+            "name": "MultiPlayer",
+            "id": "b5aa4df5-3e90-4f9b-8e78-0dd209b1e028",
+            "actions": [
+                {
+                    "name": "New action",
+                    "type": "Button",
+                    "id": "94beb159-5d96-47d8-ad51-1095f5561120",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                }
+            ],
+            "bindings": [
+                {
+                    "name": "",
+                    "id": "2717883e-ec66-48a3-81cb-c3a4fb1ecfd7",
+                    "path": "",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "New action",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }

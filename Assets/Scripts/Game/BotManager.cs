@@ -7,7 +7,6 @@ public class BotManager : MonoBehaviour
 {
     [SerializeField] PlayerMovement enemyPlayer;
     [SerializeField] PlayerMovement botPlayer;
-    [SerializeField] BallManager ball;
 
     [Header("SwinUp")]
     [SerializeField] Vector2 swinUpRangeDefault;
@@ -62,7 +61,7 @@ public class BotManager : MonoBehaviour
     [SerializeField] float hitDelay;
     float hitDelayCounter = 0;
 
-    [SerializeField] bool isRightSidePlayer = false;
+    [SerializeField] public bool isRightSidePlayer = false;
 
     RaycastHit DropPointInfo;
     [SerializeField] LayerMask whatIsDropPoint;
@@ -80,7 +79,7 @@ public class BotManager : MonoBehaviour
     void Update()
     {
         // Drop Point Compute
-        Physics.Raycast(ball.transform.position, ball.transform.right, out DropPointInfo, 100, whatIsDropPoint);
+        Physics.Raycast(BallManager.Instance.transform.position, BallManager.Instance.transform.right, out DropPointInfo, 100, whatIsDropPoint);
 
         hitDelayCounter -= Time.deltaTime;
         jumpDelayCounter -= Time.deltaTime;
@@ -94,15 +93,15 @@ public class BotManager : MonoBehaviour
             // The bot is not allowed to hit the ball until it crosses over to the opponent's side of the court after the serve.
             if (isHitAfterServeLocked)
             {
-                if (isRightSidePlayer && ball.BallInLeftSide || !isRightSidePlayer && !ball.BallInLeftSide)
+                if (isRightSidePlayer && BallManager.Instance.BallInLeftSide || !isRightSidePlayer && !BallManager.Instance.BallInLeftSide)
                 {
                     isHitAfterServeLocked = false;
                 }
             }
 
             // Ball is in enemy side
-            if (isRightSidePlayer && ball.BallInLeftSide ||
-                !isRightSidePlayer && !ball.BallInLeftSide)
+            if (isRightSidePlayer && BallManager.Instance.BallInLeftSide ||
+                !isRightSidePlayer && !BallManager.Instance.BallInLeftSide)
             {
                 BallInEnemySideMovement();
                 Jump();
@@ -141,14 +140,14 @@ public class BotManager : MonoBehaviour
                 }
                 else
                 {
-                    MoveBotTo(ball.transform.position.x, 0.01f);
+                    MoveBotTo(BallManager.Instance.transform.position.x, 0.01f);
                 }
             }
             else if (Mathf.Abs(enemyPlayer.transform.position.x) <= 4.5f && !enemyPlayer.onGround)
             {
                 MoveBotTo(DefensePositionX, 0.01f);
             }
-            else if ((3.5 >= ball.rb.velocity.x && ball.rb.velocity.x > 0))
+            else if ((3.5 >= BallManager.Instance.rb.velocity.x && BallManager.Instance.rb.velocity.x > 0))
             {
                 MoveBotTo(FrontPositionX, 0.01f);
             }
@@ -156,7 +155,7 @@ public class BotManager : MonoBehaviour
             {
                 if (enemyPlayer.onGround)
                 {
-                    if (ball.rb.velocity.magnitude <= 18f)
+                    if (BallManager.Instance.rb.velocity.magnitude <= 18f)
                     {
                         // back to court center
                         MoveBotTo(CenterPositionX, 0.1f);
@@ -184,14 +183,14 @@ public class BotManager : MonoBehaviour
                 }
                 else
                 {
-                    MoveBotTo(ball.transform.position.x, 0.01f);
+                    MoveBotTo(BallManager.Instance.transform.position.x, 0.01f);
                 }
             }
             else if (Mathf.Abs(enemyPlayer.transform.position.x) <= 3)
             {
                 MoveBotTo(DefensePositionX, 0.01f);
             }
-            else if ((-3.5 >= ball.rb.velocity.x && ball.rb.velocity.x > 0))
+            else if ((-3.5 >= BallManager.Instance.rb.velocity.x && BallManager.Instance.rb.velocity.x > 0))
             {
                 MoveBotTo(-FrontPositionX, 0.01f);
             }
@@ -217,11 +216,11 @@ public class BotManager : MonoBehaviour
         //    MoveBotTo(DropPointInfo.point.x, 0.01f);
         //}
         // Smash Liner
-        if (ball.ballStates == BallManager.BallStates.Smash)
+        if (BallManager.Instance.IsInState(BallManager.BallStates.Smash))
         {
-            if(Mathf.Abs(ball.rb.velocity.x) < 5f && ball.rb.velocity.y < 0f)
+            if(Mathf.Abs(BallManager.Instance.rb.velocity.x) < 5f && BallManager.Instance.rb.velocity.y < 0f)
             {
-                MoveBotTo(ball.transform.position.x, 0.01f);
+                MoveBotTo(BallManager.Instance.transform.position.x, 0.01f);
             }
             else if (4.5f > DropPointInfo.point.y && DropPointInfo.point.y > 0)
             {
@@ -232,39 +231,39 @@ public class BotManager : MonoBehaviour
                 if (isRightSidePlayer)
                 {
                     // Fast Liner
-                    if (ball.rb.velocity.x > 10f)
+                    if (BallManager.Instance.rb.velocity.x > 10f)
                     {
-                        if (ball.transform.position.x < botPlayer.transform.position.x)
+                        if (BallManager.Instance.transform.position.x < botPlayer.transform.position.x)
                         {
                             MoveBotTo(DefensePositionX, 0.05f);
                         }
                         else
                         {
-                            MoveBotTo(ball.transform.position.x - 0.2f, 0.05f);
+                            MoveBotTo(BallManager.Instance.transform.position.x - 0.2f, 0.05f);
                         }
                     }
                     else
                     {
-                        MoveBotTo(ball.transform.position.x - 0.2f, 0.05f);
+                        MoveBotTo(BallManager.Instance.transform.position.x - 0.2f, 0.05f);
                     }
                 }
                 else
                 {
                     // Fast Liner
-                    if (ball.rb.velocity.x < -10f)
+                    if (BallManager.Instance.rb.velocity.x < -10f)
                     {
-                        if (ball.transform.position.x > botPlayer.transform.position.x)
+                        if (BallManager.Instance.transform.position.x > botPlayer.transform.position.x)
                         {
                             MoveBotTo(-DefensePositionX, 0.05f);
                         }
                         else
                         {
-                            MoveBotTo(ball.transform.position.x + 0.2f, 0.05f);
+                            MoveBotTo(BallManager.Instance.transform.position.x + 0.2f, 0.05f);
                         }
                     }
                     else
                     {
-                        MoveBotTo(ball.transform.position.x + 0.2f, 0.05f);
+                        MoveBotTo(BallManager.Instance.transform.position.x + 0.2f, 0.05f);
                     }
                 }
             }
@@ -272,18 +271,18 @@ public class BotManager : MonoBehaviour
         else
         {
             if (isRightSidePlayer)
-                MoveBotTo(ball.transform.position.x - 0.3f, 0.05f);
+                MoveBotTo(BallManager.Instance.transform.position.x - 0.3f, 0.05f);
             else
-                MoveBotTo(ball.transform.position.x + 0.3f, 0.05f);
+                MoveBotTo(BallManager.Instance.transform.position.x + 0.3f, 0.05f);
         }
     }
     private void Jump()
     {
-        if( Mathf.Abs( ball.rb.velocity.x ) <= 18f &&
-            (isRightSidePlayer && ball.transform.position.x < transform.position.x + 0.3f ||
-            !isRightSidePlayer && ball.transform.position.x > transform.position.x - 0.3f))
+        if( Mathf.Abs(BallManager.Instance.rb.velocity.x ) <= 18f &&
+            (isRightSidePlayer && BallManager.Instance.transform.position.x < transform.position.x + 0.3f ||
+            !isRightSidePlayer && BallManager.Instance.transform.position.x > transform.position.x - 0.3f))
         {
-            if (!canJump && ball.transform.position.y - transform.position.y >= JumpHeight)
+            if (!canJump && BallManager.Instance.transform.position.y - transform.position.y >= JumpHeight)
             {
                 canJump = true;
                 if (Random.Range(0f, 1f) <= JumpProbability)
@@ -297,8 +296,8 @@ public class BotManager : MonoBehaviour
             }
             else
             {
-                if (ball.rb.velocity.y < 0 && jumpDelayCounter <= 0f && canJump &&
-                    Mathf.Abs(ball.transform.position.x - botPlayer.transform.position.x) <= 0.5f)
+                if (BallManager.Instance.rb.velocity.y < 0 && jumpDelayCounter <= 0f && canJump &&
+                    Mathf.Abs(BallManager.Instance.transform.position.x - botPlayer.transform.position.x) <= 0.5f)
                 {
                     setRandomValue();
                     jumpDelayReset();
@@ -321,15 +320,15 @@ public class BotManager : MonoBehaviour
         if (canSwin())
         {
             // SwinDown
-            if (ball.transform.position.y - botPlayer.transform.position.y <= swinDownRange.y &&
-                Mathf.Abs(ball.transform.position.x - botPlayer.transform.position.x) <= swinDownRange.x)
+            if (BallManager.Instance.transform.position.y - botPlayer.transform.position.y <= swinDownRange.y &&
+                Mathf.Abs(BallManager.Instance.transform.position.x - botPlayer.transform.position.x) <= swinDownRange.x)
             {
                 hitDelayReset();
                 setRandomValue();
                 botPlayer.swinDownInputFlag = true;
             }
-            else if (ball.transform.position.y - botPlayer.transform.position.y <= swinUpRange.y &&
-                Mathf.Abs(ball.transform.position.x - botPlayer.transform.position.x) <= swinUpRange.x)
+            else if (BallManager.Instance.transform.position.y - botPlayer.transform.position.y <= swinUpRange.y &&
+                Mathf.Abs(BallManager.Instance.transform.position.x - botPlayer.transform.position.x) <= swinUpRange.x)
             {
                 hitDelayReset();
                 setRandomValue();
@@ -381,7 +380,7 @@ public class BotManager : MonoBehaviour
     }
     bool isBallFlyingToYou()
     {
-        return isRightSidePlayer ? (ball.rb.velocity.x > 0) : (ball.rb.velocity.x < 0);
+        return isRightSidePlayer ? (BallManager.Instance.rb.velocity.x > 0) : (BallManager.Instance.rb.velocity.x < 0);
     }
 
     void setRandomValue()
