@@ -384,6 +384,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 847354486634de24985240b0ee772d52, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  Info:
+    name: Player
+    score: 0
+    game: 0
+    smashCount: 0
+    defenceCount: 0
+    overhandCount: 0
+    underhandCount: 0
 --- !u!114 &1117428462548657271
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -411,8 +419,6 @@ MonoBehaviour:
   normalGravityScale: 1
   enableFallGravityScale: 1
   fallGravityScale: 1.3
-  hitCoolDown: 0.35
-  ball: {fileID: 0}
   racket: {fileID: 2523875935646291306}
   moveInputFlag: 0
   jumpInputFlag: 0
@@ -537,7 +543,7 @@ AudioSource:
   m_GameObject: {fileID: 909109874194044293}
   m_Enabled: 1
   serializedVersion: 4
-  OutputAudioMixerGroup: {fileID: 0}
+  OutputAudioMixerGroup: {fileID: 6295675491731607902, guid: 7765157f39c574942bcc39bb7d8eeae7, type: 2}
   m_audioClip: {fileID: 8300000, guid: 8571a7977c95cd84fbcb91f634917ca1, type: 3}
   m_PlayOnAwake: 0
   m_Volume: 1
@@ -638,7 +644,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   enemyPlayer: {fileID: 1117428462548657271}
   botPlayer: {fileID: 1117428462548657271}
-  ball: {fileID: 0}
   swinUpRangeDefault: {x: 0.6, y: 2.33}
   swinUpRangeXRandom: 1
   swinUpRangeXRandomRange: 0.02
