@@ -233,6 +233,7 @@ GameObject:
   - component: {fileID: 42722444}
   - component: {fileID: 42722443}
   - component: {fileID: 42722442}
+  - component: {fileID: 42722445}
   m_Layer: 0
   m_Name: PlayerBorder_Left
   m_TagString: Untagged
@@ -318,6 +319,21 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 42722440}
   m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!114 &42722445
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 42722440}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b0373f9791ef4a745a27ca0bd1b6e27b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  bundleUrl: http://myownhost.ddns.net/assetbundle/courtbordermaterialbundle
+  assetName: BorderMaterial
+  meshRenderer: {fileID: 42722443}
 --- !u!1 &43408773
 GameObject:
   m_ObjectHideFlags: 0
@@ -1167,9 +1183,6 @@ MonoBehaviour:
   neverFinish: 0
   Player1: {fileID: 846389454}
   Player2: {fileID: 758331623}
-  Ball: {fileID: 796490629}
-  Player1HatPoint: {fileID: 909109875199266208}
-  Player2HatPoint: {fileID: 758331620}
   ServeBorderL: {fileID: 468233089}
   ServeBorderR: {fileID: 257269076}
   GameoverPanel: {fileID: 877779759}
@@ -1181,6 +1194,7 @@ MonoBehaviour:
   GameoverCheeringSound: {fileID: 234814730}
   directionalLight: {fileID: 1161708845}
   spotLight: {fileID: 2101688609}
+  isMultiplayer: 0
 --- !u!4 &234814729
 Transform:
   m_ObjectHideFlags: 0
@@ -17830,6 +17844,7 @@ GameObject:
   - component: {fileID: 715044494}
   - component: {fileID: 715044493}
   - component: {fileID: 715044492}
+  - component: {fileID: 715044495}
   m_Layer: 0
   m_Name: PlayerBorder_Right
   m_TagString: Untagged
@@ -17845,8 +17860,8 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 715044490}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 7.5, y: 0, z: 5}
-  m_LocalScale: {x: 0.03, y: 7.5, z: 13.300001}
+  m_LocalPosition: {x: 7.500001, y: 0, z: 5.000001}
+  m_LocalScale: {x: 0.03, y: 7.5, z: 13.300002}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 1206369681}
@@ -17915,6 +17930,21 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 715044490}
   m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!114 &715044495
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 715044490}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b0373f9791ef4a745a27ca0bd1b6e27b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  bundleUrl: http://myownhost.ddns.net/assetbundle/courtbordermaterialbundle
+  assetName: BorderMaterial
+  meshRenderer: {fileID: 715044493}
 --- !u!1 &743450991
 GameObject:
   m_ObjectHideFlags: 0
@@ -18323,11 +18353,6 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 9e2eed9e40515104c849495e5e39059b, type: 3}
---- !u!4 &758331620 stripped
-Transform:
-  m_CorrespondingSourceObject: {fileID: 3097128635166130281, guid: 9e2eed9e40515104c849495e5e39059b, type: 3}
-  m_PrefabInstance: {fileID: 758331619}
-  m_PrefabAsset: {fileID: 0}
 --- !u!114 &758331621 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 1117428462548657271, guid: 9e2eed9e40515104c849495e5e39059b, type: 3}
@@ -20687,6 +20712,7 @@ GameObject:
   - component: {fileID: 1071294435}
   - component: {fileID: 1071294434}
   - component: {fileID: 1071294433}
+  - component: {fileID: 1071294436}
   m_Layer: 0
   m_Name: PlayerBorder_Back
   m_TagString: Untagged
@@ -20702,8 +20728,8 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1071294431}
   m_LocalRotation: {x: -0, y: -0, z: 0.7071068, w: 0.7071068}
-  m_LocalPosition: {x: 0, y: -3.6000009, z: 5}
-  m_LocalScale: {x: 0.030000001, y: 15.5, z: 13.3}
+  m_LocalPosition: {x: 0.00000047683716, y: -3.6000028, z: 5.0000005}
+  m_LocalScale: {x: 0.030000003, y: 15.5, z: 13.300001}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 1206369681}
@@ -20772,6 +20798,21 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1071294431}
   m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!114 &1071294436
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1071294431}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b0373f9791ef4a745a27ca0bd1b6e27b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  bundleUrl: http://myownhost.ddns.net/assetbundle/courtbordermaterialbundle
+  assetName: BorderMaterial
+  meshRenderer: {fileID: 1071294434}
 --- !u!1 &1089842056 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 8347205372664945158, guid: 9e2eed9e40515104c849495e5e39059b, type: 3}
@@ -34336,11 +34377,6 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 9e2eed9e40515104c849495e5e39059b, type: 3}
---- !u!4 &909109875199266208 stripped
-Transform:
-  m_CorrespondingSourceObject: {fileID: 3097128635166130281, guid: 9e2eed9e40515104c849495e5e39059b, type: 3}
-  m_PrefabInstance: {fileID: 909109875199266207}
-  m_PrefabAsset: {fileID: 0}
 --- !u!114 &909109875199266209 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 8690316878104910752, guid: 9e2eed9e40515104c849495e5e39059b, type: 3}

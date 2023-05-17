@@ -320,7 +320,7 @@ public class PlayerMovement : MonoBehaviour
 
     public void OnMove(Vector2 value)
     {
-        moveInputFlag = value.x;
+        moveInputFlag = value.normalized.x;
     }
     public void OnJump(bool value)
     {
