@@ -22,6 +22,8 @@ public class MultiplayerMenuManager : MonoBehaviour
     [SerializeField] private GameObject RoomCreatePanel;
     [SerializeField] private GameObject RoomPanel;
 
+    [SerializeField] private LoadingScene loadingScene;
+
     [SerializeField] private const MenuStates defaultState = MenuStates.Multiplayer;
     public static uint menuState = ((uint)defaultState); // Multiplayer Panel 
 
@@ -82,6 +84,6 @@ public class MultiplayerMenuManager : MonoBehaviour
 
     public void quitAPP()
     {
-        Application.Quit();
+        loadingScene.LoadScene(0);
     }
 }

@@ -9,8 +9,6 @@ public class BundleWebLoader : MonoBehaviour
     public string bundleUrl = "http://localhost/assetbundles/testbundle";
     public string assetName = "BundledObject";
 
-    [SerializeField] MeshRenderer meshRenderer;
-
     // Start is called before the first frame update
     IEnumerator Start()
     {
@@ -23,7 +21,7 @@ public class BundleWebLoader : MonoBehaviour
                 Debug.LogWarning("Failed to download AssetBundle! " + bundleUrl);
                 yield break;
             }
-            meshRenderer.material = (remoteAssetBundle.LoadAsset<Material>(assetName));
+            GetComponent<MeshRenderer>().material = (remoteAssetBundle.LoadAsset<Material>(assetName));
             remoteAssetBundle.Unload(false);
         }
     }

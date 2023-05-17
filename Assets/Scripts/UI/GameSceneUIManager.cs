@@ -1,13 +1,14 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class GameSceneUIManager : MonoBehaviour
 {
     [SerializeField] private LoadingScene loadingScene;
     public void onRematchBTNClick()
     {
-        loadingScene.LoadScene(1);
+        loadingScene.LoadScene(SceneManager.GetActiveScene().buildIndex);
     }
     public void onQuitBTNClick()
     {
