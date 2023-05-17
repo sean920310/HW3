@@ -233,6 +233,7 @@ GameObject:
   - component: {fileID: 42722444}
   - component: {fileID: 42722443}
   - component: {fileID: 42722442}
+  - component: {fileID: 42722445}
   m_Layer: 0
   m_Name: PlayerBorder_Left
   m_TagString: Untagged
@@ -288,7 +289,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 00c2eeeca6b7ab5438de0b2c757bd0a1, type: 2}
+  - {fileID: 2100000, guid: ae95bc6b17586974d825b3b35d6ad134, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -318,6 +319,21 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 42722440}
   m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!114 &42722445
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 42722440}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b0373f9791ef4a745a27ca0bd1b6e27b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  bundleUrl: http://myownhost.ddns.net/assetbundle/courtbordermaterialbundle
+  assetName: BorderMaterial
+  meshRenderer: {fileID: 42722443}
 --- !u!1 &43408773
 GameObject:
   m_ObjectHideFlags: 0
@@ -17942,6 +17958,7 @@ GameObject:
   - component: {fileID: 715044494}
   - component: {fileID: 715044493}
   - component: {fileID: 715044492}
+  - component: {fileID: 715044495}
   m_Layer: 0
   m_Name: PlayerBorder_Right
   m_TagString: Untagged
@@ -17997,7 +18014,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 00c2eeeca6b7ab5438de0b2c757bd0a1, type: 2}
+  - {fileID: 2100000, guid: ae95bc6b17586974d825b3b35d6ad134, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -18027,6 +18044,21 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 715044490}
   m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!114 &715044495
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 715044490}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b0373f9791ef4a745a27ca0bd1b6e27b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  bundleUrl: http://myownhost.ddns.net/assetbundle/courtbordermaterialbundle
+  assetName: BorderMaterial
+  meshRenderer: {fileID: 715044493}
 --- !u!1 &743450991
 GameObject:
   m_ObjectHideFlags: 0
@@ -20789,6 +20821,7 @@ GameObject:
   - component: {fileID: 1071294435}
   - component: {fileID: 1071294434}
   - component: {fileID: 1071294433}
+  - component: {fileID: 1071294436}
   m_Layer: 0
   m_Name: PlayerBorder_Back
   m_TagString: Untagged
@@ -20844,7 +20877,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 00c2eeeca6b7ab5438de0b2c757bd0a1, type: 2}
+  - {fileID: 2100000, guid: ae95bc6b17586974d825b3b35d6ad134, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -20874,6 +20907,21 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1071294431}
   m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!114 &1071294436
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1071294431}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b0373f9791ef4a745a27ca0bd1b6e27b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  bundleUrl: http://myownhost.ddns.net/assetbundle/courtbordermaterialbundle
+  assetName: BorderMaterial
+  meshRenderer: {fileID: 1071294434}
 --- !u!1 &1089842056 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 8347205372664945158, guid: 9e2eed9e40515104c849495e5e39059b, type: 3}

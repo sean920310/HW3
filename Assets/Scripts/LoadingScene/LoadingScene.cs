@@ -42,7 +42,7 @@ public class LoadingScene : MonoBehaviour
     {
         yield return new WaitForSeconds(1f);
 
-        PhotonNetwork.LoadLevel(1);
+        PhotonNetwork.LoadLevel(sceneID);
 
         while (PhotonNetwork.LevelLoadingProgress < 1f)
         {

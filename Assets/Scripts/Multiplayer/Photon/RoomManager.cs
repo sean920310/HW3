@@ -91,7 +91,7 @@ public class RoomManager : MonoBehaviourPunCallbacks
         {
             //PhotonNetwork.CurrentRoom.IsOpen = false;
             //PhotonNetwork.CurrentRoom.IsVisible = false;
-            loader.MuliplayerLoadScene(1);
+            loader.MuliplayerLoadScene(3);
         }
     }
 }
