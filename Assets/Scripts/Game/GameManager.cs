@@ -244,7 +244,7 @@ public class GameManager : MonoBehaviour
         }
 
         // Set Light
-        directionalLight.intensity = 0.5f;
+        directionalLight.intensity = 0.1f;
         spotLight.gameObject.SetActive(true);
         switch (Winner)
         {
