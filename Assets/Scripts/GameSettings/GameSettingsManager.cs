@@ -23,6 +23,10 @@ public class GameSettingsManager : MonoBehaviour
     public GameSettingsData settingsData;
     private FileDataHandler dataHandler;
 
+    [Header("Game Settings")]
+    [SerializeField] AudioSettingsManager audioSettings;
+
+
     private void Awake()
     {
 
@@ -71,6 +75,7 @@ public class GameSettingsManager : MonoBehaviour
             dataPersistenceObj.LoadData(settingsData);
         }
 
+        UpdateGameSettings();
     }
 
     public void UpdateWithSettings()
@@ -135,6 +140,14 @@ public class GameSettingsManager : MonoBehaviour
         return new List<ISettingsDataPersistence>(dataPersistenceObjects);
     }
 
+    public void UpdateGameSettings()
+    {
+        audioSettings.SetMasterVolume(settingsData.MasterVolume);
+        audioSettings.SetMusicVolume(settingsData.MusicVolume);
+        audioSettings.SetUIVolume(settingsData.UIVolume);
+        audioSettings.SetSoundVolume(settingsData.SoundVolume);
+    }
+
     public void Update()
     {
         UpdateWithSettings();
@@ -147,4 +160,6 @@ public class GameSettingsManager : MonoBehaviour
     {
         SaveSettings();
     }
+
+
 }
