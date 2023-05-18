@@ -22,6 +22,9 @@ public class GameSettingsData
     [SerializeField] public int resolutionWidth;
     [SerializeField] public int resolutionHeight;
 
+    // Multiplayer
+    [SerializeField] public string multiplayerName;
+
     public GameSettingsData()
     {
 
@@ -33,5 +36,7 @@ public class GameSettingsData
         fullscreen = true;
         resolutionWidth = 1920;
         resolutionHeight = 1080;
+
+        multiplayerName = "";
     }
 }
