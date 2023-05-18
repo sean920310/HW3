@@ -5,7 +5,7 @@ using UnityEngine;
 
 public class MultiplayerSettings : MonoBehaviour, ISettingsDataPersistence
 {
-    [SerializeField] TMP_InputField playerNameInput;
+    public TMP_InputField playerNameInput;
     public void LoadData(GameSettingsData data)
     {
         playerNameInput.text = data.multiplayerName;
