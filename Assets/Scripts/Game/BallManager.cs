@@ -327,6 +327,9 @@ public class BallManager : MonoBehaviour, IPunObservable
                 trailRenderer.enabled = true;
                 HitParticle.Play();
             }
+
+            if (pv)
+                PhotonManager.Instance.PlayerInfoUpdate(other.transform.root.GetComponent<PhotonView>().Owner, playerInfo);
         }
     }
 

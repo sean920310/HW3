@@ -146,7 +146,10 @@ public class GameManager : MonoBehaviour
         // Check if the game over condition has been satisfied.
         if (CheckIsGameover())
         {
-            GameOver();
+            if (isMultiplayer)
+                PhotonManager.Instance.GameOver();
+            else
+                GameOver();
         }
     }
 
@@ -172,7 +175,10 @@ public class GameManager : MonoBehaviour
         // Check if the game over condition has been satisfied.
         if (CheckIsGameover())
         {
-            GameOver();
+            if (isMultiplayer)
+                PhotonManager.Instance.GameOver();
+            else
+                GameOver();
         }
     }
 
@@ -324,8 +330,9 @@ public class GameManager : MonoBehaviour
         Player2Movement.SetPlayerServe(false);
     }
 
-    private void GameStart(bool isMultiplayer = false)
+    private void GameStart(bool _isMultiplayer = false)
     {
+        isMultiplayer = _isMultiplayer;
         if (Player1)
         {
             Player1Movement = Player1.GetComponent<PlayerMovement>();

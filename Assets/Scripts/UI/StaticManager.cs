@@ -26,11 +26,15 @@ public class StaticManager : MonoBehaviour
     [SerializeField] private TextMeshProUGUI P1UnderhandText;
     [SerializeField] private TextMeshProUGUI P2UnderhandText;
 
-    [SerializeField] PlayerInformationManager Player1Info;
-    [SerializeField] PlayerInformationManager Player2Info;
+    PlayerInformationManager Player1Info;
+    PlayerInformationManager Player2Info;
 
     void Start()
     {
+        Player1Info = GameManager.instance.Player1.GetComponent<PlayerInformationManager>();
+        Player2Info = GameManager.instance.Player2.GetComponent<PlayerInformationManager>();
+        if (!(Player1Info && Player2Info)) return;
+
         P1NameHeader.text = Player1Info.Info.name;
         P2NameHeader.text = Player2Info.Info.name;
 
