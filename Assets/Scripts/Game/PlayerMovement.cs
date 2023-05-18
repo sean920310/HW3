@@ -35,7 +35,7 @@ public class PlayerMovement : MonoBehaviour
     // Swin
     [Header("Swin")]
     [SerializeField] RacketManager racket;
-    [SerializeField] public bool CanSwin { get; private set; } = false;
+    [SerializeField] public bool CanSwin = false;
 
     [SerializeField] public bool PrepareServe { get; private set; } = false;
     bool facingRight = false;
@@ -156,11 +156,22 @@ public class PlayerMovement : MonoBehaviour
                 {
                     if (BallManager.Instance.transform.position.x - transform.position.x <= 0.2f)
                     {
+
+                        // Tutorial flag
+                        if (ToturialManager.Instance)
+                        {
+                            ToturialManager.Instance.underhandBack = true;
+                        }
                         animator.SetTrigger("SwingDownBack");
                         if (pv) pv.RPC("RpcAnimTrigger", RpcTarget.Others, "SwingDownBack");
                     }
                     else
                     {
+                        // Tutorial flag
+                        if (ToturialManager.Instance)
+                        {
+                            ToturialManager.Instance.underhandFront = true;
+                        }
                         animator.SetTrigger("SwingDownFront");
                         if (pv) pv.RPC("RpcAnimTrigger", RpcTarget.Others, "SwingDownFront");
                     }
@@ -268,12 +279,27 @@ public class PlayerMovement : MonoBehaviour
             }
         }
     }
+    public void setAnimationToIdle()
+    {
+        animator.Play("Idle", -1, 0.0f);
+    }
 
     #region Input Handler
     public void OnMove(InputAction.CallbackContext context)
     {
+
+
         if (context.performed)
+        {
             moveInputFlag = context.ReadValue<float>();
+
+            // Tutorial flag
+            if (ToturialManager.Instance)
+            {
+                ToturialManager.Instance.moveLeft |= moveInputFlag == -1 ? true : false;
+                ToturialManager.Instance.moveRight |= moveInputFlag == 1 ? true : false;
+            }
+        }
 
         if (context.canceled)
             moveInputFlag = 0f;
@@ -281,7 +307,15 @@ public class PlayerMovement : MonoBehaviour
     public void OnJump(InputAction.CallbackContext context)
     {
         if (context.started)
+        {
             jumpInputFlag = true;
+
+            // Tutorial flag
+            if (ToturialManager.Instance)
+            {
+                ToturialManager.Instance.jumpInputFlag = true;
+            }
+        }
 
         if (context.canceled)
             jumpInputFlag = false;
@@ -289,7 +323,15 @@ public class PlayerMovement : MonoBehaviour
     public void OnSwinUp(InputAction.CallbackContext context)
     {
         if (context.started)
+        {
             swinUpInputFlag = true;
+
+            // Tutorial flag
+            if (ToturialManager.Instance)
+            {
+                ToturialManager.Instance.swinUpInputFlag = true;
+            }
+        }
 
         if (context.canceled)
             swinUpInputFlag = false;
@@ -297,7 +339,15 @@ public class PlayerMovement : MonoBehaviour
     public void OnSwinDown(InputAction.CallbackContext context)
     {
         if (context.started)
+        {
             swinDownInputFlag = true;
+
+            // Tutorial flag
+            if (ToturialManager.Instance)
+            {
+                ToturialManager.Instance.swinDownInputFlag = true;
+            }
+        }
 
         if (context.canceled)
             swinDownInputFlag = false;

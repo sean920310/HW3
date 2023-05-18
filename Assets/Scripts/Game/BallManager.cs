@@ -165,6 +165,11 @@ public class BallManager : MonoBehaviour, IPunObservable
         PlayerInformationManager playerInfo = other.transform.root.GetComponent<PlayerInformationManager>();
         if (racketManager != null)
         {
+
+            // Tutorial flag
+            if (ToturialManager.Instance)
+                ToturialManager.Instance.hitBall = true;
+
             if (other.transform.root.GetComponent<PhotonView>() && !other.transform.root.GetComponent<PhotonView>().IsMine) return;
             rb.velocity = Vector3.zero;
             if (pv)
@@ -260,6 +265,11 @@ public class BallManager : MonoBehaviour, IPunObservable
                         trailRenderer.startColor = SmashTrailColor;
                         SmashSound.Play();
                     }
+
+
+                    // Tutorial flag
+                    if (ToturialManager.Instance)
+                        ToturialManager.Instance.smash = true;
                 }
                 else
                 {
@@ -327,6 +337,7 @@ public class BallManager : MonoBehaviour, IPunObservable
                 trailRenderer.enabled = true;
                 HitParticle.Play();
             }
+
         }
     }
 
@@ -344,6 +355,11 @@ public class BallManager : MonoBehaviour, IPunObservable
                     PhotonManager.Instance.P1GetPoint();
                 else
                     GameManager.instance.p1GetPoint();
+
+                // Tutorial flag
+                if (ToturialManager.Instance)
+                    ToturialManager.Instance.hitEnemyGround = true;
+
             }
             else if (collision.gameObject.name == "Player1Floor")
             {
@@ -351,6 +367,11 @@ public class BallManager : MonoBehaviour, IPunObservable
                     PhotonManager.Instance.P2GetPoint();
                 else
                     GameManager.instance.p2GetPoint();
+
+                // Tutorial flag
+                if (ToturialManager.Instance)
+                    ToturialManager.Instance.hitPlayerGround = true;
+
             }
 
             if (pv)
