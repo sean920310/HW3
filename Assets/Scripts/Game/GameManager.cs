@@ -312,6 +312,24 @@ public class GameManager : MonoBehaviour
         Player2Movement.ResetInputFlag();
     }
 
+
+    public void toturialSetup()
+    {
+        if (Player1)
+        {
+            Player1Movement = Player1.GetComponent<PlayerMovement>();
+            Player1Info = Player1.GetComponent<PlayerInformationManager>();
+            Player1HatPoint = Player1.transform.Find("Body/Neck/Head/HatPoint");
+        }
+        if (Player2)
+        {
+            Player2Movement = Player2.GetComponent<PlayerMovement>();
+            Player2Info = Player2.GetComponent<PlayerInformationManager>();
+            Player2HatPoint = Player2.transform.Find("Body/Neck/Head/HatPoint");
+        }
+        gameState = GameStates.InGame;
+    }
+
     #region Button_Event
     public void OnQuitClick()
     {
@@ -336,22 +354,6 @@ public class GameManager : MonoBehaviour
         HUD.SetServeHint(false, false);
         Player1Movement.SetPlayerServe(false);
         Player2Movement.SetPlayerServe(false);
-    }
-
-    public void toturialSetup()
-    {
-        if (Player1)
-        {
-            Player1Movement = Player1.GetComponent<PlayerMovement>();
-            Player1Info = Player1.GetComponent<PlayerInformationManager>();
-            Player1HatPoint = Player1.transform.Find("Body/Neck/Head/HatPoint");
-        }
-        if (Player2)
-        {
-            Player2Movement = Player2.GetComponent<PlayerMovement>();
-            Player2Info = Player2.GetComponent<PlayerInformationManager>();
-            Player2HatPoint = Player2.transform.Find("Body/Neck/Head/HatPoint");
-        }
     }
 
     private void GameStart(bool isMultiplayer = false)
