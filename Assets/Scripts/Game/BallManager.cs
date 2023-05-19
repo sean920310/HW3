@@ -165,6 +165,11 @@ public class BallManager : MonoBehaviour, IPunObservable
         PlayerInformationManager playerInfo = other.transform.root.GetComponent<PlayerInformationManager>();
         if (racketManager != null)
         {
+
+            // Tutorial flag
+            if (TutorialManager.Instance)
+                TutorialManager.Instance.hitBall = true;
+
             if (other.transform.root.GetComponent<PhotonView>() && !other.transform.root.GetComponent<PhotonView>().IsMine) return;
             rb.velocity = Vector3.zero;
             if (pv)
@@ -198,7 +203,7 @@ public class BallManager : MonoBehaviour, IPunObservable
                     playerInfo.Info.defenceCount++;
 
                     if (pv)
-                        pv.RPC("RpcDefenceHit", RpcTarget.All, PhotonNetwork.IsMasterClient);
+                        pv.RPC("RpcDefenceHit", RpcTarget.All, PhotonManager.Instance.IsPlayer1());
                     else
                     {
                         trailRenderer.startColor = DefenseTrailColor;
@@ -251,15 +256,21 @@ public class BallManager : MonoBehaviour, IPunObservable
                         p2StatesPanel.ShowMessageRight("Smash!!!");
 
                     playerInfo.Info.smashCount++;
+                    playerInfo.Info.overhandCount++;
 
                     if (pv)
-                        pv.RPC("RpcSmashHit", RpcTarget.All, PhotonNetwork.IsMasterClient);
+                        pv.RPC("RpcSmashHit", RpcTarget.All, PhotonManager.Instance.IsPlayer1());
                     else
                     {
                         PowerHitParticle.Play();
                         trailRenderer.startColor = SmashTrailColor;
                         SmashSound.Play();
                     }
+
+
+                    // Tutorial flag
+                    if (TutorialManager.Instance)
+                        TutorialManager.Instance.smash = true;
                 }
                 else
                 {
@@ -286,7 +297,7 @@ public class BallManager : MonoBehaviour, IPunObservable
                         playerInfo.Info.defenceCount++;
 
                         if (pv)
-                            pv.RPC("RpcDefenceHit", RpcTarget.All, PhotonNetwork.IsMasterClient);
+                            pv.RPC("RpcDefenceHit", RpcTarget.All, PhotonManager.Instance.IsPlayer1());
                         else
                         {
                             trailRenderer.startColor = DefenseTrailColor;
@@ -327,6 +338,9 @@ public class BallManager : MonoBehaviour, IPunObservable
                 trailRenderer.enabled = true;
                 HitParticle.Play();
             }
+
+            if (pv && !PhotonManager.Instance.OneSideLeave())
+                PhotonManager.Instance.PlayerInfoUpdate(other.transform.root.GetComponent<PhotonView>().Owner, playerInfo);
         }
     }
 
@@ -344,6 +358,11 @@ public class BallManager : MonoBehaviour, IPunObservable
                     PhotonManager.Instance.P1GetPoint();
                 else
                     GameManager.instance.p1GetPoint();
+
+                // Tutorial flag
+                if (TutorialManager.Instance)
+                    TutorialManager.Instance.hitEnemyGround = true;
+
             }
             else if (collision.gameObject.name == "Player1Floor")
             {
@@ -351,6 +370,11 @@ public class BallManager : MonoBehaviour, IPunObservable
                     PhotonManager.Instance.P2GetPoint();
                 else
                     GameManager.instance.p2GetPoint();
+
+                // Tutorial flag
+                if (TutorialManager.Instance)
+                    TutorialManager.Instance.hitPlayerGround = true;
+
             }
 
             if (pv)

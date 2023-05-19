@@ -9,7 +9,7 @@ public class GameSettingsData
     public long lastUpdated;
 
     // General
-
+    [SerializeField] public bool tutorial;
 
     // Audio
     [SerializeField] public float MasterVolume;
@@ -22,8 +22,13 @@ public class GameSettingsData
     [SerializeField] public int resolutionWidth;
     [SerializeField] public int resolutionHeight;
 
+    // Multiplayer
+    [SerializeField] public string multiplayerName;
+
     public GameSettingsData()
     {
+
+        tutorial = true;
 
         MasterVolume = 1.0f;
         MusicVolume  = 1.0f;
@@ -33,5 +38,7 @@ public class GameSettingsData
         fullscreen = true;
         resolutionWidth = 1920;
         resolutionHeight = 1080;
+
+        multiplayerName = "";
     }
 }

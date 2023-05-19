@@ -48,6 +48,7 @@ public class CreateRoom : MonoBehaviourPunCallbacks
         roomSetting.IsOpen = true;
         roomSetting.CustomRoomProperties = new Hashtable() { { "pwd", _password } };
         roomSetting.CustomRoomPropertiesForLobby =  new string[] { "pwd" };
+        roomSetting.CleanupCacheOnLeave = false;
 
         PhotonNetwork.CreateRoom(_roomName, roomSetting, TypedLobby.Default);
     }

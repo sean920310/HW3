@@ -5,8 +5,8 @@ using UnityEngine.InputSystem;
 
 public class BotManager : MonoBehaviour
 {
-    [SerializeField] PlayerMovement enemyPlayer;
-    [SerializeField] PlayerMovement botPlayer;
+    [SerializeField] public PlayerMovement enemyPlayer;
+    [SerializeField] public PlayerMovement botPlayer;
 
     [Header("SwinUp")]
     [SerializeField] Vector2 swinUpRangeDefault;
@@ -69,6 +69,16 @@ public class BotManager : MonoBehaviour
     bool newPrepareServe = false;
     bool canJump = false;
     bool isHitAfterServeLocked = false;
+
+    private void OnEnable()
+    {
+        botPlayer.botOn = true;
+    }
+
+    private void OnDisable()
+    {
+        botPlayer.botOn = false;
+    }
 
     void Start()
     {

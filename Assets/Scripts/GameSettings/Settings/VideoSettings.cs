@@ -75,11 +75,14 @@ public class VideoSettings : MonoBehaviour, ISettingsDataPersistence
 
     public void SetResolution(int resolutionIdx)
     {
-        Resolution resolution = filterResolutions[resolutionIdx];
-        //Screen.SetResolution(resolution.width, resolution.height, true);
+        if(filterResolutions.Count < resolutionIdx)
+        {
+            Resolution resolution = filterResolutions[resolutionIdx];
+            //Screen.SetResolution(resolution.width, resolution.height, true);
 
-        settingsData.resolutionWidth = resolution.width;
-        settingsData.resolutionHeight = resolution.height;
+            settingsData.resolutionWidth = resolution.width;
+            settingsData.resolutionHeight = resolution.height;
+        }
     }
 
     public void SaveData()

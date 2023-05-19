@@ -26,7 +26,7 @@ public class PhotonConnecting : MonoBehaviourPunCallbacks
         PhotonNetwork.SendRate = 50; // How many informations server send.
         PhotonNetwork.SerializationRate = 40;
         PhotonNetwork.AutomaticallySyncScene = true;
-        PhotonNetwork.NickName = "Random" + Random.Range(0,999).ToString("0000");
+        //PhotonNetwork.NickName = "Random" + Random.Range(0,999).ToString("0000");
 
         ConnectingToPhoton();
     }
