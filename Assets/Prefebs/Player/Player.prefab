@@ -420,6 +420,7 @@ MonoBehaviour:
   enableFallGravityScale: 1
   fallGravityScale: 1.3
   racket: {fileID: 2523875935646291306}
+  CanSwin: 0
   moveInputFlag: 0
   jumpInputFlag: 0
   swinUpInputFlag: 0

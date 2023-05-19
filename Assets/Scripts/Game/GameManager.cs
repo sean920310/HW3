@@ -104,7 +104,7 @@ public class GameManager : MonoBehaviour
     {
         if (Input.GetKeyDown(KeyCode.Escape))
         {
-            if(gameState != GameStates.GamePreparing)
+            if(gameState != GameStates.GamePreparing || TutorialManager.Instance != null)
             {
                 if (gameState == GameStates.GamePause) Resume();
                 else Pause();
@@ -135,12 +135,16 @@ public class GameManager : MonoBehaviour
         HUD.SetServeHint(true, false);
 
         // Set Player State 
-        SetServePlayer(Players.Player1);
+        if(TutorialManager.Instance == null)
+        {
+            SetServePlayer(Players.Player1);
+        }
         playerStatesReset();
         StartCoroutine(PlayerMovementDisableForAWhile(0.5f));
 
         // Set ball Serve State to true
-        BallManager.Instance.SwitchState(BallManager.BallStates.Serving);
+        if (TutorialManager.Instance == null)
+            BallManager.Instance.SwitchState(BallManager.BallStates.Serving);
 
         ServeBorderActive(true);
 
@@ -164,12 +168,17 @@ public class GameManager : MonoBehaviour
         HUD.SetServeHint(false, true);
 
         // Set Player State 
-        SetServePlayer(Players.Player2);
+        if (TutorialManager.Instance == null)
+        {
+            SetServePlayer(Players.Player2);
+        }
         playerStatesReset();
         StartCoroutine(PlayerMovementDisableForAWhile(0.5f));
 
+
         // Set ball Serve State to true
-        BallManager.Instance.SwitchState(BallManager.BallStates.Serving);
+        if (TutorialManager.Instance == null)
+            BallManager.Instance.SwitchState(BallManager.BallStates.Serving);
 
         ServeBorderActive(true);
 
@@ -208,8 +217,8 @@ public class GameManager : MonoBehaviour
         Player1Movement.ResetAllAnimatorTriggers();
         Player2Movement.ResetAllAnimatorTriggers();
 
-        Player1Movement.animator.Play("Idle", -1, 0.0f);
-        Player2Movement.animator.Play("Idle", -1, 0.0f);
+        Player1Movement.setAnimationToIdle();
+        Player2Movement.setAnimationToIdle();
 
         Player1Movement.transform.localPosition = new Vector3(-3, 1.06f, 0);
         Player2Movement.transform.localPosition = new Vector3(3, 1.06f, 0);
@@ -294,6 +303,11 @@ public class GameManager : MonoBehaviour
         Player2HatPoint = Player2.transform.Find("Body/Neck/Head/HatPoint");
     }
 
+    public void SetEndless()
+    {
+        neverFinish = true;
+    }
+
     public void Pause()
     {
         gameState = GameStates.GamePause;
@@ -320,6 +334,24 @@ public class GameManager : MonoBehaviour
         Player2Movement.swinEnable();
         Player1Movement.ResetInputFlag();
         Player2Movement.ResetInputFlag();
+    }
+
+
+    public void toturialSetup()
+    {
+        if (Player1)
+        {
+            Player1Movement = Player1.GetComponent<PlayerMovement>();
+            Player1Info = Player1.GetComponent<PlayerInformationManager>();
+            Player1HatPoint = Player1.transform.Find("Body/Neck/Head/HatPoint");
+        }
+        if (Player2)
+        {
+            Player2Movement = Player2.GetComponent<PlayerMovement>();
+            Player2Info = Player2.GetComponent<PlayerInformationManager>();
+            Player2HatPoint = Player2.transform.Find("Body/Neck/Head/HatPoint");
+        }
+        gameState = GameStates.InGame;
     }
 
     #region Button_Event

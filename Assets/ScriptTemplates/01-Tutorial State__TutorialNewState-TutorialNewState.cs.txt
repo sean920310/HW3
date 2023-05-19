@@ -1,0 +1,21 @@
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+
+public class #SCRIPTNAME# : TutorialStateBase
+{
+    public #SCRIPTNAME#(TutorialManager context) : base(context)
+    {
+    #NOTRIM#
+    }
+
+    public override void EnterState()
+    {
+    #NOTRIM#
+    }
+
+    public override void SwitchState()
+    {
+    #NOTRIM#
+    }
+}

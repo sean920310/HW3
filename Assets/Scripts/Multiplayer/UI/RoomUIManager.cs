@@ -28,7 +28,7 @@ public class RoomUIManager : MonoBehaviour
 
     public void isMasterUpdate(bool isMaster)
     {
-        PlayButton.interactable = isMaster;
+        PlayButton.interactable = isMaster && (PlayerList.childCount > 1);
     }
 
     public void UpdatePlayerList(Dictionary<int, Photon.Realtime.Player> playerList)

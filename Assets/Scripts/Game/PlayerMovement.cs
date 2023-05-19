@@ -35,7 +35,7 @@ public class PlayerMovement : MonoBehaviour
     // Swin
     [Header("Swin")]
     [SerializeField] RacketManager racket;
-    [SerializeField] public bool CanSwin { get; private set; } = false;
+    [SerializeField] public bool CanSwin = false;
 
     [SerializeField] public bool PrepareServe { get; private set; } = false;
     bool facingRight = false;
@@ -157,11 +157,22 @@ public class PlayerMovement : MonoBehaviour
                 {
                     if (BallManager.Instance.transform.position.x - transform.position.x <= 0.2f)
                     {
+
+                        // Tutorial flag
+                        if (TutorialManager.Instance)
+                        {
+                            TutorialManager.Instance.underhandBack = true;
+                        }
                         animator.SetTrigger("SwingDownBack");
                         if (pv) pv.RPC("RpcAnimTrigger", RpcTarget.Others, "SwingDownBack");
                     }
                     else
                     {
+                        // Tutorial flag
+                        if (TutorialManager.Instance)
+                        {
+                            TutorialManager.Instance.underhandFront = true;
+                        }
                         animator.SetTrigger("SwingDownFront");
                         if (pv) pv.RPC("RpcAnimTrigger", RpcTarget.Others, "SwingDownFront");
                     }
@@ -261,6 +272,10 @@ public class PlayerMovement : MonoBehaviour
     }
     public void ResetAllAnimatorTriggers()
     {
+        animator.SetBool("Move", false);
+        animator.SetBool("OnGround", false);
+        animator.SetBool("ServePrepare", false);
+
         foreach (var trigger in animator.parameters)
         {
             if (trigger.type == AnimatorControllerParameterType.Trigger)
@@ -269,6 +284,10 @@ public class PlayerMovement : MonoBehaviour
             }
         }
     }
+    public void setAnimationToIdle()
+    {
+        animator.Play("Idle", -1, 0.0f);
+    }
 
     #region Input Handler
     public void OnMove(InputAction.CallbackContext context)
@@ -276,7 +295,16 @@ public class PlayerMovement : MonoBehaviour
         if (botOn) return;
 
         if (context.performed)
+        {
             moveInputFlag = context.ReadValue<float>();
+
+            // Tutorial flag
+            if (TutorialManager.Instance)
+            {
+                TutorialManager.Instance.moveLeft |= moveInputFlag == -1 ? true : false;
+                TutorialManager.Instance.moveRight |= moveInputFlag == 1 ? true : false;
+            }
+        }
 
         if (context.canceled)
             moveInputFlag = 0f;
@@ -286,7 +314,15 @@ public class PlayerMovement : MonoBehaviour
         if (botOn) return;
         
         if (context.started)
+        {
             jumpInputFlag = true;
+
+            // Tutorial flag
+            if (TutorialManager.Instance)
+            {
+                TutorialManager.Instance.jumpInputFlag = true;
+            }
+        }
 
         if (context.canceled)
             jumpInputFlag = false;
@@ -296,7 +332,15 @@ public class PlayerMovement : MonoBehaviour
         if (botOn) return;
         
         if (context.started)
+        {
             swinUpInputFlag = true;
+
+            // Tutorial flag
+            if (TutorialManager.Instance)
+            {
+                TutorialManager.Instance.swinUpInputFlag = true;
+            }
+        }
 
         if (context.canceled)
             swinUpInputFlag = false;
@@ -306,7 +350,15 @@ public class PlayerMovement : MonoBehaviour
         if (botOn) return;
         
         if (context.started)
+        {
             swinDownInputFlag = true;
+
+            // Tutorial flag
+            if (TutorialManager.Instance)
+            {
+                TutorialManager.Instance.swinDownInputFlag = true;
+            }
+        }
 
         if (context.canceled)
             swinDownInputFlag = false;

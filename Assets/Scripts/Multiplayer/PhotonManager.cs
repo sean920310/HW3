@@ -573,7 +573,7 @@ public class PhotonManager : MonoBehaviourPunCallbacks
 			players = GameManager.Players.Player1;
 			if(GameManager.instance.Player1)
             {
-				//¦pªG¹ï¤èobject¤w¸g³Q©ñ¿ù¦ì¸m
+				//ï¿½pï¿½Gï¿½ï¿½ï¿½objectï¿½wï¿½gï¿½Qï¿½ï¿½ï¿½ï¿½ï¿½m
 				GameManager.instance.Player2 = GameManager.instance.Player1;
 				player2 = info.Sender;
             }				
@@ -583,7 +583,7 @@ public class PhotonManager : MonoBehaviourPunCallbacks
 			players = GameManager.Players.Player2;
 			if (GameManager.instance.Player2)
 			{
-				//¦pªG¹ï¤èobject¤w¸g³Q©ñ¿ù¦ì¸m
+				//ï¿½pï¿½Gï¿½ï¿½ï¿½objectï¿½wï¿½gï¿½Qï¿½ï¿½ï¿½ï¿½ï¿½m
 				GameManager.instance.Player1 = GameManager.instance.Player2;
 				player1 = info.Sender;
 			}

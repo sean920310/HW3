@@ -165,6 +165,11 @@ public class BallManager : MonoBehaviour, IPunObservable
         PlayerInformationManager playerInfo = other.transform.root.GetComponent<PlayerInformationManager>();
         if (racketManager != null)
         {
+
+            // Tutorial flag
+            if (TutorialManager.Instance)
+                TutorialManager.Instance.hitBall = true;
+
             if (other.transform.root.GetComponent<PhotonView>() && !other.transform.root.GetComponent<PhotonView>().IsMine) return;
             rb.velocity = Vector3.zero;
             if (pv)
@@ -261,6 +266,11 @@ public class BallManager : MonoBehaviour, IPunObservable
                         trailRenderer.startColor = SmashTrailColor;
                         SmashSound.Play();
                     }
+
+
+                    // Tutorial flag
+                    if (TutorialManager.Instance)
+                        TutorialManager.Instance.smash = true;
                 }
                 else
                 {
@@ -348,6 +358,11 @@ public class BallManager : MonoBehaviour, IPunObservable
                     PhotonManager.Instance.P1GetPoint();
                 else
                     GameManager.instance.p1GetPoint();
+
+                // Tutorial flag
+                if (TutorialManager.Instance)
+                    TutorialManager.Instance.hitEnemyGround = true;
+
             }
             else if (collision.gameObject.name == "Player1Floor")
             {
@@ -355,6 +370,11 @@ public class BallManager : MonoBehaviour, IPunObservable
                     PhotonManager.Instance.P2GetPoint();
                 else
                     GameManager.instance.p2GetPoint();
+
+                // Tutorial flag
+                if (TutorialManager.Instance)
+                    TutorialManager.Instance.hitPlayerGround = true;
+
             }
 
             if (pv)
