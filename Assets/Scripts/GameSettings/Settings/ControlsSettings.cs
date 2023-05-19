@@ -242,7 +242,7 @@ public class ControlsSettings : MonoBehaviour
                 var path = operation.action.GetBindingDisplayString(negative.bindingIndex);
                 var keyStr = InputControlPath.ToHumanReadableString(path, InputControlPath.HumanReadableStringOptions.OmitDevice);
 
-                p1MoveLeftActionText.text = keyStr;
+                p2MoveLeftActionText.text = keyStr;
                 operation.Dispose();
                 playerInput.SwitchCurrentActionMap("Player2");
             })
@@ -256,7 +256,7 @@ public class ControlsSettings : MonoBehaviour
 
         p2MoveRightActionText.text = "Wait For Input...";
 
-        var axis = p2MoveLeftActionRef.action.ChangeCompositeBinding("1D Axis");
+        var axis = p2MoveRightActionRef.action.ChangeCompositeBinding("1D Axis");
         var positive = axis.NextPartBinding("Positive");
 
         p2MoveRightActionRef.action.PerformInteractiveRebinding(positive.bindingIndex)
