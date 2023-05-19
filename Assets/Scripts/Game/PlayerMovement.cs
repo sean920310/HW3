@@ -158,9 +158,9 @@ public class PlayerMovement : MonoBehaviour
                     {
 
                         // Tutorial flag
-                        if (ToturialManager.Instance)
+                        if (TutorialManager.Instance)
                         {
-                            ToturialManager.Instance.underhandBack = true;
+                            TutorialManager.Instance.underhandBack = true;
                         }
                         animator.SetTrigger("SwingDownBack");
                         if (pv) pv.RPC("RpcAnimTrigger", RpcTarget.Others, "SwingDownBack");
@@ -168,9 +168,9 @@ public class PlayerMovement : MonoBehaviour
                     else
                     {
                         // Tutorial flag
-                        if (ToturialManager.Instance)
+                        if (TutorialManager.Instance)
                         {
-                            ToturialManager.Instance.underhandFront = true;
+                            TutorialManager.Instance.underhandFront = true;
                         }
                         animator.SetTrigger("SwingDownFront");
                         if (pv) pv.RPC("RpcAnimTrigger", RpcTarget.Others, "SwingDownFront");
@@ -271,6 +271,10 @@ public class PlayerMovement : MonoBehaviour
     }
     public void ResetAllAnimatorTriggers()
     {
+        animator.SetBool("Move", false);
+        animator.SetBool("OnGround", false);
+        animator.SetBool("ServePrepare", false);
+
         foreach (var trigger in animator.parameters)
         {
             if (trigger.type == AnimatorControllerParameterType.Trigger)
@@ -294,10 +298,10 @@ public class PlayerMovement : MonoBehaviour
             moveInputFlag = context.ReadValue<float>();
 
             // Tutorial flag
-            if (ToturialManager.Instance)
+            if (TutorialManager.Instance)
             {
-                ToturialManager.Instance.moveLeft |= moveInputFlag == -1 ? true : false;
-                ToturialManager.Instance.moveRight |= moveInputFlag == 1 ? true : false;
+                TutorialManager.Instance.moveLeft |= moveInputFlag == -1 ? true : false;
+                TutorialManager.Instance.moveRight |= moveInputFlag == 1 ? true : false;
             }
         }
 
@@ -311,9 +315,9 @@ public class PlayerMovement : MonoBehaviour
             jumpInputFlag = true;
 
             // Tutorial flag
-            if (ToturialManager.Instance)
+            if (TutorialManager.Instance)
             {
-                ToturialManager.Instance.jumpInputFlag = true;
+                TutorialManager.Instance.jumpInputFlag = true;
             }
         }
 
@@ -327,9 +331,9 @@ public class PlayerMovement : MonoBehaviour
             swinUpInputFlag = true;
 
             // Tutorial flag
-            if (ToturialManager.Instance)
+            if (TutorialManager.Instance)
             {
-                ToturialManager.Instance.swinUpInputFlag = true;
+                TutorialManager.Instance.swinUpInputFlag = true;
             }
         }
 
@@ -343,9 +347,9 @@ public class PlayerMovement : MonoBehaviour
             swinDownInputFlag = true;
 
             // Tutorial flag
-            if (ToturialManager.Instance)
+            if (TutorialManager.Instance)
             {
-                ToturialManager.Instance.swinDownInputFlag = true;
+                TutorialManager.Instance.swinDownInputFlag = true;
             }
         }
 

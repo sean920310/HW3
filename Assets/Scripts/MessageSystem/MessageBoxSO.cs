@@ -8,7 +8,8 @@ public struct MessageBoxData
 {
     public string HintText;
     public string ActionHintText;
-    public ToturialManager.ToturialStates toturialStates;
+
+    public TutorialType toturialStates;
 }
 
 [CreateAssetMenu]

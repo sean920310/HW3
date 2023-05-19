@@ -32,8 +32,6 @@ public class PhotonManager : MonoBehaviourPunCallbacks
 	[SerializeField] Button startBtn;
 
 
-
-
 	private GameObject myPlayer;
 	private GameObject ballObject;
 	private PhotonView pv;

@@ -103,7 +103,7 @@ public class GameManager : MonoBehaviour
     {
         if (Input.GetKeyDown(KeyCode.Escape))
         {
-            if(gameState != GameStates.GamePreparing)
+            if(gameState != GameStates.GamePreparing || TutorialManager.Instance != null)
             {
                 if (gameState == GameStates.GamePause) Resume();
                 else Pause();
@@ -134,15 +134,16 @@ public class GameManager : MonoBehaviour
         HUD.SetServeHint(true, false);
 
         // Set Player State 
-        if(ToturialManager.Instance != null)
+        if(TutorialManager.Instance == null)
         {
             SetServePlayer(Players.Player1);
         }
-            playerStatesReset();
-            StartCoroutine(PlayerMovementDisableForAWhile(0.5f));
+        playerStatesReset();
+        StartCoroutine(PlayerMovementDisableForAWhile(0.5f));
 
         // Set ball Serve State to true
-        BallManager.Instance.SwitchState(BallManager.BallStates.Serving);
+        if (TutorialManager.Instance == null)
+            BallManager.Instance.SwitchState(BallManager.BallStates.Serving);
 
         ServeBorderActive(true);
 
@@ -163,7 +164,7 @@ public class GameManager : MonoBehaviour
         HUD.SetServeHint(false, true);
 
         // Set Player State 
-        if (ToturialManager.Instance != null)
+        if (TutorialManager.Instance == null)
         {
             SetServePlayer(Players.Player2);
         }
@@ -172,7 +173,8 @@ public class GameManager : MonoBehaviour
 
 
         // Set ball Serve State to true
-        BallManager.Instance.SwitchState(BallManager.BallStates.Serving);
+        if (TutorialManager.Instance == null)
+            BallManager.Instance.SwitchState(BallManager.BallStates.Serving);
 
         ServeBorderActive(true);
 

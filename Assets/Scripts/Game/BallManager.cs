@@ -167,8 +167,8 @@ public class BallManager : MonoBehaviour, IPunObservable
         {
 
             // Tutorial flag
-            if (ToturialManager.Instance)
-                ToturialManager.Instance.hitBall = true;
+            if (TutorialManager.Instance)
+                TutorialManager.Instance.hitBall = true;
 
             if (other.transform.root.GetComponent<PhotonView>() && !other.transform.root.GetComponent<PhotonView>().IsMine) return;
             rb.velocity = Vector3.zero;
@@ -268,8 +268,8 @@ public class BallManager : MonoBehaviour, IPunObservable
 
 
                     // Tutorial flag
-                    if (ToturialManager.Instance)
-                        ToturialManager.Instance.smash = true;
+                    if (TutorialManager.Instance)
+                        TutorialManager.Instance.smash = true;
                 }
                 else
                 {
@@ -357,8 +357,8 @@ public class BallManager : MonoBehaviour, IPunObservable
                     GameManager.instance.p1GetPoint();
 
                 // Tutorial flag
-                if (ToturialManager.Instance)
-                    ToturialManager.Instance.hitEnemyGround = true;
+                if (TutorialManager.Instance)
+                    TutorialManager.Instance.hitEnemyGround = true;
 
             }
             else if (collision.gameObject.name == "Player1Floor")
@@ -369,8 +369,8 @@ public class BallManager : MonoBehaviour, IPunObservable
                     GameManager.instance.p2GetPoint();
 
                 // Tutorial flag
-                if (ToturialManager.Instance)
-                    ToturialManager.Instance.hitPlayerGround = true;
+                if (TutorialManager.Instance)
+                    TutorialManager.Instance.hitPlayerGround = true;
 
             }
 
