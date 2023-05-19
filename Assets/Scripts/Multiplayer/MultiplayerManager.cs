@@ -18,29 +18,8 @@ public class MultiplayerManager : MonoBehaviour ,IPunInstantiateMagicCallback
 
     public void OnPhotonInstantiate(PhotonMessageInfo info)
     {
-        Debug.Log("something instantiate");
-        if (info.photonView.IsMine)
-        {
-            if (PhotonNetwork.IsMasterClient)
-            {
-                GameManager.instance.Player1 = gameObject;
-            }
-            else
-            {
-                GameManager.instance.Player2 = gameObject;
-            }
-        }
-        else
-        {
-            if (PhotonNetwork.IsMasterClient)
-            {
-                GameManager.instance.Player2 = gameObject;
-            }
-            else
-            {
-                GameManager.instance.Player1 = gameObject;
-            }
-        }
+        Debug.Log("player instantiate");
+        PhotonManager.Instance.PlayerInstantiate(gameObject, info.photonView.IsMine);
     }
 
 }

@@ -45,6 +45,7 @@ public class PlayerMovement : MonoBehaviour
     [ReadOnly] public bool jumpInputFlag = false;
     [ReadOnly] public bool swinUpInputFlag = false;
     [ReadOnly] public bool swinDownInputFlag = false;
+    [ReadOnly] public bool botOn = false;
 
     //Pun
     PhotonView pv;
@@ -272,6 +273,8 @@ public class PlayerMovement : MonoBehaviour
     #region Input Handler
     public void OnMove(InputAction.CallbackContext context)
     {
+        if (botOn) return;
+
         if (context.performed)
             moveInputFlag = context.ReadValue<float>();
 
@@ -280,6 +283,8 @@ public class PlayerMovement : MonoBehaviour
     }
     public void OnJump(InputAction.CallbackContext context)
     {
+        if (botOn) return;
+        
         if (context.started)
             jumpInputFlag = true;
 
@@ -288,6 +293,8 @@ public class PlayerMovement : MonoBehaviour
     }
     public void OnSwinUp(InputAction.CallbackContext context)
     {
+        if (botOn) return;
+        
         if (context.started)
             swinUpInputFlag = true;
 
@@ -296,6 +303,8 @@ public class PlayerMovement : MonoBehaviour
     }
     public void OnSwinDown(InputAction.CallbackContext context)
     {
+        if (botOn) return;
+        
         if (context.started)
             swinDownInputFlag = true;
 

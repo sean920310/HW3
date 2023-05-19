@@ -14,6 +14,8 @@ public class PhotonManager : MonoBehaviourPunCallbacks
 
 	[Header("Player")]
 	[SerializeField] GameObject playerPrefab;
+	[SerializeField] GameObject player1Bot;
+	[SerializeField] GameObject player2Bot;
 
 	[Header("Ball")]
 	[SerializeField] GameObject ballPrefab;
@@ -37,16 +39,25 @@ public class PhotonManager : MonoBehaviourPunCallbacks
 	[SerializeField] LoadingScene loadingScene;
 
 
+	public GameManager.Players players { get; private set; }
 
+	private bool inited = false;	//gameobject inited
+	private bool rejoin = false;	//player rejoin
 
 	private GameObject myPlayer;
 	private GameObject ballObject;
 	private PhotonView pv;
 
+	private Player player1;
+	private Player player2;
+
 	private bool p1Ready = false;
 	private bool p2Ready = false;
 
-	private PlayerInformationManager playerInfo;
+	private bool p1Leave = false;
+	private bool p2Leave = false;
+
+	private Dictionary<Player, HashTable> playersInfo;
 
 
 	void Start()
@@ -54,6 +65,7 @@ public class PhotonManager : MonoBehaviourPunCallbacks
 		Instance = this;
 
 		pv = GetComponent<PhotonView>();
+		playersInfo = new Dictionary<Player, HashTable>();
 
 		// in case we started this demo with the wrong scene being active, simply load the menu scene
 		if (!PhotonNetwork.IsConnected)
@@ -65,6 +77,7 @@ public class PhotonManager : MonoBehaviourPunCallbacks
 
 		if (playerPrefab != null)
 		{
+			players = (PhotonNetwork.IsMasterClient) ? GameManager.Players.Player1 : GameManager.Players.Player2;
 			StartCoroutine(DelayInitGame());
 			InitStartSetting();
 		}
@@ -83,10 +96,16 @@ public class PhotonManager : MonoBehaviourPunCallbacks
 
     public override void OnPlayerPropertiesUpdate(Player targetPlayer, HashTable changedProps)
     {
-		if (targetPlayer == PhotonNetwork.LocalPlayer) return;
+		//if (targetPlayer == PhotonNetwork.LocalPlayer) return;
+		if (playersInfo.ContainsKey(targetPlayer))
+			playersInfo[targetPlayer] = changedProps;
+		else
+			playersInfo.Add(targetPlayer, changedProps);
+
+		if (!inited) return;
 
 		PlayerInformationManager player;
-		if (GameManager.instance.Player1.GetPhotonView().Owner == targetPlayer)
+		if (player1 == targetPlayer)
         {
 			player = GameManager.instance.Player1.GetComponent<PlayerInformationManager>();
 		}
@@ -95,6 +114,7 @@ public class PhotonManager : MonoBehaviourPunCallbacks
 			player = GameManager.instance.Player2.GetComponent<PlayerInformationManager>();
 		}
 
+		player.Info.name = (string)changedProps["name"];
 		player.Info.score = (int)changedProps["score"];
 		player.Info.smashCount = (int)changedProps["smashCount"];
 		player.Info.defenceCount = (int)changedProps["defenceCount"];
@@ -104,12 +124,67 @@ public class PhotonManager : MonoBehaviourPunCallbacks
 
     public override void OnPlayerEnteredRoom(Player other)
 	{
+		if(OneSideLeave() && players != GameManager.Players.None)
+        {
+			pv.RPC("RpcInitBallObject", other, ballObject.name);
 
+			int playerToJoin = (p1Leave) ? 1 : 2;
+			int scoreToWin = gameStart.scoreToWin.value;
+			pv.RPC("RpcRejoin", other, (int)GameManager.instance.gameState, playerToJoin, scoreToWin);
+
+			if (p1Leave)
+            {
+				PlayerInfoUpdate(pv.Owner, GameManager.instance.Player2.GetComponent<PlayerInformationManager>());
+				PlayerInfoUpdate(other, GameManager.instance.Player1.GetComponent<PlayerInformationManager>());
+            }
+			else
+            {
+				PlayerInfoUpdate(pv.Owner, GameManager.instance.Player1.GetComponent<PlayerInformationManager>());
+				PlayerInfoUpdate(other, GameManager.instance.Player2.GetComponent<PlayerInformationManager>());
+			}
+
+		}
 	}
 
 	public override void OnPlayerLeftRoom(Player other)
 	{
-		
+		if (other == player1)
+        {
+			print("P1 leave");
+			//Player1
+
+			//Master Leave
+			ballObject.GetPhotonView().TransferOwnership(player2);
+			PhotonNetwork.SetMasterClient(player2);
+			PlayerInformationManager.PlayerInfo info = GameManager.instance.Player1.GetComponent<PlayerInformationManager>().Info;
+			PhotonNetwork.Destroy(GameManager.instance.Player1);
+
+			player1Bot.SetActive(true);
+			GameManager.instance.LoadPlayer1(player1Bot);
+			player1Bot.GetComponent<PlayerInformationManager>().Info = info;
+			if (BallManager.Instance.IsInState(BallManager.BallStates.Serving) && GameManager.instance.Serving == GameManager.Players.Player1)
+			{
+				GameManager.instance.SetServePlayer(GameManager.Players.Player1);
+			}
+			p1Leave = true;
+		}
+        else if (other == player2)
+		{
+			print("P2 leave");
+			PlayerInformationManager.PlayerInfo info = GameManager.instance.Player2.GetComponent<PlayerInformationManager>().Info;
+			PhotonNetwork.Destroy(GameManager.instance.Player2);
+
+			//Player2
+			player2Bot.SetActive(true);
+			GameManager.instance.LoadPlayer2(player2Bot);
+			player2Bot.GetComponent<PlayerInformationManager>().Info = info;
+			if (BallManager.Instance.IsInState(BallManager.BallStates.Serving) && GameManager.instance.Serving == GameManager.Players.Player2)
+            {
+				GameManager.instance.SetServePlayer(GameManager.Players.Player2);
+			}
+			p2Leave = true;
+		}
+
 	}
 
 	public override void OnLeftRoom()
@@ -120,6 +195,43 @@ public class PhotonManager : MonoBehaviourPunCallbacks
 	#endregion
 
 	#region Public Methods
+
+	public bool IsPlayer1()
+    {
+		return players == GameManager.Players.Player1;
+	}
+
+	//On PlayerObject Instantiate by Photon
+	public void PlayerInstantiate(GameObject playerObject, bool isMine)
+	{
+		if(p1Leave)
+        {
+			GameManager.instance.Player1.SetActive(false);
+			GameManager.instance.LoadPlayer1(playerObject);
+			player1 = playerObject.GetPhotonView().Owner;
+			p1Leave = false;
+			return;
+		}
+		if(p2Leave)
+        {
+			GameManager.instance.Player2.SetActive(false);
+			GameManager.instance.LoadPlayer2(playerObject);
+			player2 = playerObject.GetPhotonView().Owner;
+			p2Leave = false;
+			return;
+		}
+
+		if ((isMine && IsPlayer1()) || (!isMine && !IsPlayer1()))
+		{
+			GameManager.instance.Player1 = playerObject;
+			player1 = playerObject.GetPhotonView().Owner;
+		}
+		else
+		{
+			GameManager.instance.Player2 = playerObject;
+			player2 = playerObject.GetPhotonView().Owner;
+		}
+	}
 
 	public void QuitApplication()
 	{
@@ -149,6 +261,7 @@ public class PhotonManager : MonoBehaviourPunCallbacks
 	public void PlayerInfoUpdate(Player player, PlayerInformationManager info)
     {
 		HashTable playerInfoHashTable = new HashTable();
+		playerInfoHashTable.Add("name", info.Info.name);
 		playerInfoHashTable.Add("score", info.Info.score);
 		playerInfoHashTable.Add("smashCount", info.Info.smashCount);
 		playerInfoHashTable.Add("defenceCount", info.Info.defenceCount);
@@ -156,6 +269,12 @@ public class PhotonManager : MonoBehaviourPunCallbacks
 		playerInfoHashTable.Add("underhandCount", info.Info.underhandCount);
 		player.SetCustomProperties(playerInfoHashTable);
     }
+
+	public bool OneSideLeave()
+    {
+		return p1Leave || p2Leave;
+    }
+
 
 	#endregion
 
@@ -167,23 +286,25 @@ public class PhotonManager : MonoBehaviourPunCallbacks
 		yield return new WaitForSeconds(1.0f);
 		InitGame();
 		print("inited");
+		inited = true;
 	}
 
 	void InitGame()
 	{
-		if(PhotonNetwork.IsMasterClient)
+		if(players == GameManager.Players.Player1)
         {
 			myPlayer = PhotonNetwork.Instantiate(this.playerPrefab.name, new Vector3(-3f, 1.5f, 0f), Quaternion.identity);
-			ballObject = PhotonNetwork.InstantiateRoomObject(this.ballPrefab.name, new Vector3(0, 0, 0), Quaternion.identity);
-			pv.RPC("RpcInitBallObject", RpcTarget.All, ballObject.name);
+			if (!rejoin)
+            {
+				ballObject = PhotonNetwork.Instantiate(this.ballPrefab.name, new Vector3(0, 0, 0), Quaternion.identity);
+				pv.RPC("RpcInitBallObject", RpcTarget.All, ballObject.name);
+            }
 		}
-		else
+		else if (players == GameManager.Players.Player2)
         {
 			myPlayer = PhotonNetwork.Instantiate(this.playerPrefab.name, new Vector3(3f, 1.5f, 0f), Quaternion.identity);
 			myPlayer.transform.localEulerAngles = new Vector3(0, 180, 0);
 		}
-		playerInfo = myPlayer.GetComponent<PlayerInformationManager>();
-
 	}
 
 	void InitStartSetting()
@@ -231,6 +352,23 @@ public class PhotonManager : MonoBehaviourPunCallbacks
 			nextBtn.interactable = PhotonNetwork.IsMasterClient;
 		}
     }
+
+	IEnumerator WaitInitAndRejoin(int scoreToWin)
+    {
+		while (!inited)
+			yield return null;
+
+		gameStart.scoreToWin.value = scoreToWin;
+
+		OnPlayerPropertiesUpdate(player1, playersInfo[player1]);
+		OnPlayerPropertiesUpdate(player2, playersInfo[player2]);
+
+		if(GameManager.instance.gameState == GameManager.GameStates.InGame)
+        {
+			GameManager.instance.MultiplayerStart();
+			hudAnim.SetTrigger("GameStart");
+        }
+	}
 
 	#endregion
 
@@ -420,7 +558,38 @@ public class PhotonManager : MonoBehaviourPunCallbacks
 	[PunRPC]
 	void RpcRematch(PhotonMessageInfo info)
 	{
+		PhotonNetwork.DestroyAll();
 		PhotonNetwork.LoadLevel(SceneManager.GetActiveScene().buildIndex);
+	}
+
+	[PunRPC]
+	void RpcRejoin(int gameState,int playerToJoin, int scoreToWin, PhotonMessageInfo info)
+    {
+		print("rejoin");
+		rejoin = true;
+		GameManager.instance.gameState = (GameManager.GameStates)gameState;
+		if (playerToJoin == 1)
+		{
+			players = GameManager.Players.Player1;
+			if(GameManager.instance.Player1)
+            {
+				//如果對方object已經被放錯位置
+				GameManager.instance.Player2 = GameManager.instance.Player1;
+				player2 = info.Sender;
+            }				
+		}
+		else
+        {
+			players = GameManager.Players.Player2;
+			if (GameManager.instance.Player2)
+			{
+				//如果對方object已經被放錯位置
+				GameManager.instance.Player1 = GameManager.instance.Player2;
+				player1 = info.Sender;
+			}
+		}
+
+		StartCoroutine(WaitInitAndRejoin(scoreToWin));
 	}
 
 	#endregion

@@ -28,7 +28,7 @@ public class GameManager : MonoBehaviour
 
     [Header("Game Information")]
     [SerializeField] GameStartManager gameStarManager;
-    [ReadOnly] [SerializeField] GameStates gameState;
+    [ReadOnly] [SerializeField] public GameStates gameState;
     [SerializeField] int winScore;
     [SerializeField] bool neverFinish; // Endless if true
 
@@ -58,6 +58,7 @@ public class GameManager : MonoBehaviour
     public bool isMultiplayer = false;
 
     public Players Winner { get; private set; } = Players.None;
+    public Players Serving { get; private set; } = Players.None;
 
     private PlayerMovement Player1Movement;
     private PlayerMovement Player2Movement;
@@ -182,7 +183,7 @@ public class GameManager : MonoBehaviour
         }
     }
 
-    private void SetServePlayer(Players ServePlayer)
+    public void SetServePlayer(Players ServePlayer)
     {
         if(ServePlayer == Players.Player1)
         {
@@ -192,6 +193,7 @@ public class GameManager : MonoBehaviour
         {
             Player2Movement.SetPlayerServe(true);
         }
+        Serving = ServePlayer;
     }
 
     // Serve Border will active whenever player is prepare to serve.
@@ -274,6 +276,22 @@ public class GameManager : MonoBehaviour
 
         Player1Movement.enabled = false;
         Player2Movement.enabled = false;
+    }
+
+    public void LoadPlayer1(GameObject player)
+    {
+        Player1 = player;
+        Player1Movement = Player1.GetComponent<PlayerMovement>();
+        Player1Info = Player1.GetComponent<PlayerInformationManager>();
+        Player1HatPoint = Player1.transform.Find("Body/Neck/Head/HatPoint");
+    }
+
+    public void LoadPlayer2(GameObject player)
+    {
+        Player2 = player;
+        Player2Movement = Player2.GetComponent<PlayerMovement>();
+        Player2Info = Player2.GetComponent<PlayerInformationManager>();
+        Player2HatPoint = Player2.transform.Find("Body/Neck/Head/HatPoint");
     }
 
     public void Pause()
