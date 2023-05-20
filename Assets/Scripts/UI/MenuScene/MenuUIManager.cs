@@ -30,6 +30,7 @@ public class MenuUIManager : MonoBehaviour
         }
         else
         {
+            MultiplayerBtn.interactable = true;
             SingleplayerBtn.GetComponentInChildren<TextMeshProUGUI>().text = "SinglePlayer";
         }
         if (Input.GetKeyUp(KeyCode.Escape))
