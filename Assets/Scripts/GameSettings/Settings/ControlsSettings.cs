@@ -159,8 +159,8 @@ public class ControlsSettings : MonoBehaviour
         // Rebinding
         playerInput.SwitchCurrentActionMap("PlayerRebinding");
 
-        p1JumpActionText.text = "Wait For Input...";
-        p1JumpActionRef.action.PerformInteractiveRebinding()
+        p1OverhandActionText.text = "Wait For Input...";
+        p1OverhandActionRef.action.PerformInteractiveRebinding()
             .OnMatchWaitForAnother(0.1f)
             .WithCancelingThrough("<Keyboard>/escape")
             .OnComplete(operation =>
@@ -168,7 +168,7 @@ public class ControlsSettings : MonoBehaviour
                 var path = operation.action.bindings[0].effectivePath;
                 var keyStr = InputControlPath.ToHumanReadableString(path, InputControlPath.HumanReadableStringOptions.OmitDevice);
 
-                p1JumpActionText.text = keyStr;
+                p1OverhandActionText.text = keyStr;
                 operation.Dispose();
                 playerInput.SwitchCurrentActionMap("Player1");
             })
@@ -177,7 +177,7 @@ public class ControlsSettings : MonoBehaviour
                 var path = operation.action.bindings[0].effectivePath;
                 var keyStr = InputControlPath.ToHumanReadableString(path, InputControlPath.HumanReadableStringOptions.OmitDevice);
 
-                p1JumpActionText.text = keyStr;
+                p1OverhandActionText.text = keyStr;
                 operation.Dispose();
                 playerInput.SwitchCurrentActionMap("Player1");
             })
@@ -189,8 +189,8 @@ public class ControlsSettings : MonoBehaviour
         // Rebinding
         playerInput.SwitchCurrentActionMap("PlayerRebinding");
 
-        p1JumpActionText.text = "Wait For Input...";
-        p1JumpActionRef.action.PerformInteractiveRebinding()
+        p1UnderhandActionText.text = "Wait For Input...";
+        p1UnderhandActionRef.action.PerformInteractiveRebinding()
             .OnMatchWaitForAnother(0.1f)
             .WithCancelingThrough("<Keyboard>/escape")
             .OnComplete(operation =>
@@ -198,7 +198,7 @@ public class ControlsSettings : MonoBehaviour
                 var path = operation.action.bindings[0].effectivePath;
                 var keyStr = InputControlPath.ToHumanReadableString(path, InputControlPath.HumanReadableStringOptions.OmitDevice);
 
-                p1JumpActionText.text = keyStr;
+                p1UnderhandActionText.text = keyStr;
                 operation.Dispose();
                 playerInput.SwitchCurrentActionMap("Player1");
             })
@@ -207,7 +207,7 @@ public class ControlsSettings : MonoBehaviour
                 var path = operation.action.bindings[0].effectivePath;
                 var keyStr = InputControlPath.ToHumanReadableString(path, InputControlPath.HumanReadableStringOptions.OmitDevice);
 
-                p1JumpActionText.text = keyStr;
+                p1UnderhandActionText.text = keyStr;
                 operation.Dispose();
                 playerInput.SwitchCurrentActionMap("Player1");
             })
@@ -242,7 +242,7 @@ public class ControlsSettings : MonoBehaviour
                 var path = operation.action.GetBindingDisplayString(negative.bindingIndex);
                 var keyStr = InputControlPath.ToHumanReadableString(path, InputControlPath.HumanReadableStringOptions.OmitDevice);
 
-                p1MoveLeftActionText.text = keyStr;
+                p2MoveLeftActionText.text = keyStr;
                 operation.Dispose();
                 playerInput.SwitchCurrentActionMap("Player2");
             })
@@ -256,7 +256,7 @@ public class ControlsSettings : MonoBehaviour
 
         p2MoveRightActionText.text = "Wait For Input...";
 
-        var axis = p2MoveLeftActionRef.action.ChangeCompositeBinding("1D Axis");
+        var axis = p2MoveRightActionRef.action.ChangeCompositeBinding("1D Axis");
         var positive = axis.NextPartBinding("Positive");
 
         p2MoveRightActionRef.action.PerformInteractiveRebinding(positive.bindingIndex)
@@ -318,8 +318,8 @@ public class ControlsSettings : MonoBehaviour
         // Rebinding
         playerInput.SwitchCurrentActionMap("PlayerRebinding");
 
-        p2JumpActionText.text = "Wait For Input...";
-        p2JumpActionRef.action.PerformInteractiveRebinding()
+        p2OverhandActionText.text = "Wait For Input...";
+        p2OverhandActionRef.action.PerformInteractiveRebinding()
             .OnMatchWaitForAnother(0.1f)
             .WithCancelingThrough("<Keyboard>/escape")
             .OnComplete(operation =>
@@ -327,7 +327,7 @@ public class ControlsSettings : MonoBehaviour
                 var path = operation.action.bindings[0].effectivePath;
                 var keyStr = InputControlPath.ToHumanReadableString(path, InputControlPath.HumanReadableStringOptions.OmitDevice);
 
-                p2JumpActionText.text = keyStr;
+                p2OverhandActionText.text = keyStr;
                 operation.Dispose();
                 playerInput.SwitchCurrentActionMap("Player2");
             })
@@ -336,7 +336,7 @@ public class ControlsSettings : MonoBehaviour
                 var path = operation.action.bindings[0].effectivePath;
                 var keyStr = InputControlPath.ToHumanReadableString(path, InputControlPath.HumanReadableStringOptions.OmitDevice);
 
-                p2JumpActionText.text = keyStr;
+                p2OverhandActionText.text = keyStr;
                 operation.Dispose();
                 playerInput.SwitchCurrentActionMap("Player2");
             })
@@ -348,8 +348,8 @@ public class ControlsSettings : MonoBehaviour
         // Rebinding
         playerInput.SwitchCurrentActionMap("PlayerRebinding");
 
-        p2JumpActionText.text = "Wait For Input...";
-        p2JumpActionRef.action.PerformInteractiveRebinding()
+        p2UnderhandActionText.text = "Wait For Input...";
+        p2UnderhandActionRef.action.PerformInteractiveRebinding()
             .OnMatchWaitForAnother(0.1f)
             .WithCancelingThrough("<Keyboard>/escape")
             .OnComplete(operation =>
@@ -357,7 +357,7 @@ public class ControlsSettings : MonoBehaviour
                 var path = operation.action.bindings[0].effectivePath;
                 var keyStr = InputControlPath.ToHumanReadableString(path, InputControlPath.HumanReadableStringOptions.OmitDevice);
 
-                p2JumpActionText.text = keyStr;
+                p2UnderhandActionText.text = keyStr;
                 operation.Dispose();
                 playerInput.SwitchCurrentActionMap("Player2");
             })
@@ -366,7 +366,7 @@ public class ControlsSettings : MonoBehaviour
                 var path = operation.action.bindings[0].effectivePath;
                 var keyStr = InputControlPath.ToHumanReadableString(path, InputControlPath.HumanReadableStringOptions.OmitDevice);
 
-                p2JumpActionText.text = keyStr;
+                p2UnderhandActionText.text = keyStr;
                 operation.Dispose();
                 playerInput.SwitchCurrentActionMap("Player2");
             })
