@@ -9361,6 +9361,17 @@ GameObject:
   m_CorrespondingSourceObject: {fileID: 8053261948560937623, guid: a3f91a217b86bf84cb042c7356917553, type: 3}
   m_PrefabInstance: {fileID: 896999845}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &896999848 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 5606558334520982708, guid: a3f91a217b86bf84cb042c7356917553, type: 3}
+  m_PrefabInstance: {fileID: 896999845}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e55b27da7965b044083963b7ccdd6d25, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!4 &1033310344 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: 63ba2ac2f796a614790a9b6255478d9d, type: 3}
@@ -10357,6 +10368,10 @@ PrefabInstance:
       propertyPath: SettingsPanel
       value: 
       objectReference: {fileID: 896999847}
+    - target: {fileID: 3573399917662440719, guid: f1f92a15def78ef45b0ba38778d8932f, type: 3}
+      propertyPath: MultiplayerSetting
+      value: 
+      objectReference: {fileID: 896999848}
     - target: {fileID: 3573399917983691810, guid: f1f92a15def78ef45b0ba38778d8932f, type: 3}
       propertyPath: m_AnchorMax.x
       value: 0.8541016

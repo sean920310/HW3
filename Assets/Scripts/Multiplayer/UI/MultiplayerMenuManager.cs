@@ -27,6 +27,7 @@ public class MultiplayerMenuManager : MonoBehaviour, ISettingsDataPersistence
     [SerializeField] private GameObject RoomCreatePanel;
     [SerializeField] private GameObject RoomPanel;
     [SerializeField] private GameObject SettingsPanel;
+    [SerializeField] private MultiplayerSettings MultiplayerSetting;
 
     [SerializeField] private LoadingScene loadingScene;
 
@@ -100,7 +101,7 @@ public class MultiplayerMenuManager : MonoBehaviour, ISettingsDataPersistence
         if (GameSettingsManager.instance)
             GameSettingsManager.instance.settingsData.multiplayerName = playername;
 
-        SettingsPanel.GetComponentInChildren<MultiplayerSettings>().playerNameInput.text = playername;
+        MultiplayerSetting.playerNameInput.text = playername;
 
         playerNameUpdate();
         resetAndOpenState(defaultState);
