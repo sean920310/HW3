@@ -198,7 +198,7 @@ public class GameManager : MonoBehaviour
         {
             Player1Movement.SetPlayerServe(true);
         }
-        else
+        else if (ServePlayer == Players.Player2)
         {
             Player2Movement.SetPlayerServe(true);
         }
@@ -315,6 +315,20 @@ public class GameManager : MonoBehaviour
         PausePanel.gameObject.SetActive(true);
     }
 
+    public void SetHat()
+    {
+        if (CharacterSlot.HatList[CharacterSlot.player1currentHatIdx].hatData.HatPrefab != null)
+        {
+            GameObject tmpHatPrefab = GameObject.Instantiate(CharacterSlot.HatList[CharacterSlot.player1currentHatIdx].hatData.HatPrefab);
+            tmpHatPrefab.transform.SetParent(Player1HatPoint, false);
+        }
+        if (CharacterSlot.HatList[CharacterSlot.player2currentHatIdx].hatData.HatPrefab != null)
+        {
+            GameObject tmpHatPrefab = GameObject.Instantiate(CharacterSlot.HatList[CharacterSlot.player2currentHatIdx].hatData.HatPrefab);
+            tmpHatPrefab.transform.SetParent(Player2HatPoint, false);
+        }
+    }
+
     private void Resume()
     {
         gameState = GameStates.InGame;
@@ -368,9 +382,9 @@ public class GameManager : MonoBehaviour
         GameStart();
     }
 
-    public void MultiplayerStart()
+    public void MultiplayerStart(Players initServing = Players.Player1)
     {
-        GameStart(true);
+        GameStart(true, initServing);
     }
 
     public void EndServe()
@@ -378,9 +392,10 @@ public class GameManager : MonoBehaviour
         HUD.SetServeHint(false, false);
         Player1Movement.SetPlayerServe(false);
         Player2Movement.SetPlayerServe(false);
+        Serving = Players.None;
     }
 
-    private void GameStart(bool _isMultiplayer = false)
+    private void GameStart(bool _isMultiplayer = false, Players initServing = Players.Player1)
     {
         isMultiplayer = _isMultiplayer;
         if (Player1)
@@ -407,16 +422,7 @@ public class GameManager : MonoBehaviour
         Player2Info.Info.name = gameStarManager.Player2NameInput.text;
 
         // Set Hat.
-        if (CharacterSlot.HatList[CharacterSlot.player1currentHatIdx].hatData.HatPrefab != null)
-        {
-            GameObject tmpHatPrefab = GameObject.Instantiate(CharacterSlot.HatList[CharacterSlot.player1currentHatIdx].hatData.HatPrefab);
-            tmpHatPrefab.transform.SetParent(Player1HatPoint, false);
-        }
-        if (CharacterSlot.HatList[CharacterSlot.player2currentHatIdx].hatData.HatPrefab != null)
-        {
-            GameObject tmpHatPrefab = GameObject.Instantiate(CharacterSlot.HatList[CharacterSlot.player2currentHatIdx].hatData.HatPrefab);
-            tmpHatPrefab.transform.SetParent(Player2HatPoint, false);
-        }
+        SetHat();
 
         // Ser Winning Score.
         if (gameStarManager.scoreToWin.options.ToArray()[gameStarManager.scoreToWin.value].text != "Endless")
@@ -431,8 +437,13 @@ public class GameManager : MonoBehaviour
         BallManager.Instance.gameObject.SetActive(true);
 
         // Set Player State 
-        SetServePlayer(Players.Player1);
-        HUD.SetServeHint(true, false);
+        SetServePlayer(initServing);
+        if(initServing == Players.Player1)
+            HUD.SetServeHint(true, false);
+        else if (initServing == Players.Player2)
+            HUD.SetServeHint(false, true);
+        else
+            HUD.SetServeHint(false, false);
 
         Player1Movement.transform.localPosition = new Vector3(-3, 1.06f, 0);
         Player2Movement.transform.localPosition = new Vector3(3, 1.06f, 0);
@@ -442,7 +453,8 @@ public class GameManager : MonoBehaviour
         // Set ball Serve State to true
         BallManager.Instance.SwitchState(BallManager.BallStates.Serving);
 
-        ServeBorderActive(true);
+        if(initServing != Players.None)
+            ServeBorderActive(true);
 
         // HUD Update
         HUD.ScorePanelUpdate(Player1Info.Info.score, Player2Info.Info.score);

@@ -130,19 +130,29 @@ public class PhotonManager : MonoBehaviourPunCallbacks
 
 			int playerToJoin = (p1Leave) ? 1 : 2;
 			int scoreToWin = gameStart.scoreToWin.value;
-			pv.RPC("RpcRejoin", other, (int)GameManager.instance.gameState, playerToJoin, scoreToWin);
-
-			if (p1Leave)
+			int p1Hat = CharacterSlot.player1currentHatIdx;
+			int p2Hat = CharacterSlot.player2currentHatIdx;
+			GameManager.Players initServing = GameManager.Players.None;
+			if(GameManager.instance.gameState == GameManager.GameStates.InGame && BallManager.Instance.IsInState(BallManager.BallStates.Serving))
             {
-				PlayerInfoUpdate(pv.Owner, GameManager.instance.Player2.GetComponent<PlayerInformationManager>());
-				PlayerInfoUpdate(other, GameManager.instance.Player1.GetComponent<PlayerInformationManager>());
+				initServing = GameManager.instance.Serving;
             }
-			else
-            {
-				PlayerInfoUpdate(pv.Owner, GameManager.instance.Player1.GetComponent<PlayerInformationManager>());
-				PlayerInfoUpdate(other, GameManager.instance.Player2.GetComponent<PlayerInformationManager>());
-			}
 
+			pv.RPC("RpcRejoin", other, (int)GameManager.instance.gameState, playerToJoin, scoreToWin, initServing, p1Hat, p2Hat);
+
+			if(GameManager.instance.gameState != GameManager.GameStates.GamePreparing)
+            {
+				if (p1Leave)
+				{
+					PlayerInfoUpdate(pv.Owner, GameManager.instance.Player2.GetComponent<PlayerInformationManager>());
+					PlayerInfoUpdate(other, GameManager.instance.Player1.GetComponent<PlayerInformationManager>());
+				}
+				else
+				{
+					PlayerInfoUpdate(pv.Owner, GameManager.instance.Player1.GetComponent<PlayerInformationManager>());
+					PlayerInfoUpdate(other, GameManager.instance.Player2.GetComponent<PlayerInformationManager>());
+				}
+            }
 		}
 	}
 
@@ -166,6 +176,7 @@ public class PhotonManager : MonoBehaviourPunCallbacks
 			{
 				GameManager.instance.SetServePlayer(GameManager.Players.Player1);
 			}
+			GameManager.instance.SetHat();
 			p1Leave = true;
 		}
         else if (other == player2)
@@ -182,6 +193,7 @@ public class PhotonManager : MonoBehaviourPunCallbacks
             {
 				GameManager.instance.SetServePlayer(GameManager.Players.Player2);
 			}
+			GameManager.instance.SetHat();
 			p2Leave = true;
 		}
 
@@ -206,16 +218,30 @@ public class PhotonManager : MonoBehaviourPunCallbacks
 	{
 		if(p1Leave)
         {
+			PlayerInformationManager.PlayerInfo info = GameManager.instance.Player1.GetComponent<PlayerInformationManager>().Info;
 			GameManager.instance.Player1.SetActive(false);
 			GameManager.instance.LoadPlayer1(playerObject);
+			GameManager.instance.Player1.GetComponent<PlayerInformationManager>().Info = info;
+			if (BallManager.Instance.IsInState(BallManager.BallStates.Serving) && GameManager.instance.Serving == GameManager.Players.Player1)
+			{
+				GameManager.instance.SetServePlayer(GameManager.Players.Player1);
+			}
+			GameManager.instance.SetHat();
 			player1 = playerObject.GetPhotonView().Owner;
 			p1Leave = false;
 			return;
 		}
 		if(p2Leave)
         {
+			PlayerInformationManager.PlayerInfo info = GameManager.instance.Player2.GetComponent<PlayerInformationManager>().Info;
 			GameManager.instance.Player2.SetActive(false);
 			GameManager.instance.LoadPlayer2(playerObject);
+			GameManager.instance.Player2.GetComponent<PlayerInformationManager>().Info = info;
+			if (BallManager.Instance.IsInState(BallManager.BallStates.Serving) && GameManager.instance.Serving == GameManager.Players.Player2)
+			{
+				GameManager.instance.SetServePlayer(GameManager.Players.Player2);
+			}
+			GameManager.instance.SetHat();
 			player2 = playerObject.GetPhotonView().Owner;
 			p2Leave = false;
 			return;
@@ -353,7 +379,7 @@ public class PhotonManager : MonoBehaviourPunCallbacks
 		}
     }
 
-	IEnumerator WaitInitAndRejoin(int scoreToWin)
+	IEnumerator WaitInitAndRejoin(int scoreToWin, int initServing)
     {
 		while (!inited)
 			yield return null;
@@ -365,7 +391,7 @@ public class PhotonManager : MonoBehaviourPunCallbacks
 
 		if(GameManager.instance.gameState == GameManager.GameStates.InGame)
         {
-			GameManager.instance.MultiplayerStart();
+			GameManager.instance.MultiplayerStart((GameManager.Players)initServing);
 			hudAnim.SetTrigger("GameStart");
         }
 	}
@@ -376,7 +402,7 @@ public class PhotonManager : MonoBehaviourPunCallbacks
 
 	public void OnP1NameChange(string value)
 	{
-		if (pv && PhotonNetwork.IsMasterClient)
+		if (pv && IsPlayer1() && !rejoin)
         {
 			PhotonNetwork.NickName = value;
 			pv.RPC("RpcP1NameChange", RpcTarget.Others, value);
@@ -385,7 +411,7 @@ public class PhotonManager : MonoBehaviourPunCallbacks
 
 	public void OnP2NameChange(string value)
 	{
-		if (pv && !PhotonNetwork.IsMasterClient)
+		if (pv && !IsPlayer1() && !rejoin)
         {
 			PhotonNetwork.NickName = value;
 			pv.RPC("RpcP2NameChange", RpcTarget.Others, value);
@@ -394,19 +420,19 @@ public class PhotonManager : MonoBehaviourPunCallbacks
 
 	public void OnP1HatChange()
 	{
-		if (pv)
+		if (pv && !rejoin)
 			pv.RPC("RpcP1HatChange", RpcTarget.All, CharacterSlot.player1currentHatIdx);
 	}
 
 	public void OnP2HatChange()
 	{
-		if (pv)
+		if (pv && !rejoin)
 			pv.RPC("RpcP2HatChange", RpcTarget.All, CharacterSlot.player2currentHatIdx);
 	}
 
 	public void OnScoreChange(int value)
 	{
-		if (pv)
+		if (pv && !rejoin)
 			pv.RPC("RpcScoreChange", RpcTarget.Others, value);
 	}
 
@@ -495,6 +521,7 @@ public class PhotonManager : MonoBehaviourPunCallbacks
 	[PunRPC]
 	void RpcP1HatChange(int value, PhotonMessageInfo info)
 	{
+		if (p1Leave || p2Leave) return;
 		CharacterSlot.player1currentHatIdx = value;
 		gameStart.characterSlot.UpdateUI();
 	}
@@ -502,6 +529,7 @@ public class PhotonManager : MonoBehaviourPunCallbacks
 	[PunRPC]
 	void RpcP2HatChange(int value, PhotonMessageInfo info)
 	{
+		if (p1Leave || p2Leave) return;
 		CharacterSlot.player2currentHatIdx = value;
 		gameStart.characterSlot.UpdateUI();
 	}
@@ -558,16 +586,19 @@ public class PhotonManager : MonoBehaviourPunCallbacks
 	[PunRPC]
 	void RpcRematch(PhotonMessageInfo info)
 	{
-		PhotonNetwork.DestroyAll();
+		if(PhotonNetwork.IsMasterClient)
+			PhotonNetwork.DestroyAll();
 		PhotonNetwork.LoadLevel(SceneManager.GetActiveScene().buildIndex);
 	}
 
 	[PunRPC]
-	void RpcRejoin(int gameState,int playerToJoin, int scoreToWin, PhotonMessageInfo info)
+	void RpcRejoin(int gameState,int playerToJoin, int scoreToWin, int initServing, int p1Hat, int p2Hat, PhotonMessageInfo info)
     {
 		print("rejoin");
 		rejoin = true;
 		GameManager.instance.gameState = (GameManager.GameStates)gameState;
+		CharacterSlot.player1currentHatIdx = p1Hat;
+		CharacterSlot.player2currentHatIdx = p2Hat;
 		if (playerToJoin == 1)
 		{
 			players = GameManager.Players.Player1;
@@ -589,7 +620,7 @@ public class PhotonManager : MonoBehaviourPunCallbacks
 			}
 		}
 
-		StartCoroutine(WaitInitAndRejoin(scoreToWin));
+		StartCoroutine(WaitInitAndRejoin(scoreToWin, initServing));
 	}
 
 	#endregion
