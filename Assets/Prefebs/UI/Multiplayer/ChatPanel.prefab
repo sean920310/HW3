@@ -730,6 +730,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a0c1aadd366bb524b8204ff7ae397089, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  messagePanel: {fileID: 3860510858168519589}
   messageContent: {fileID: 7663626500279300715}
   messageElementPrefeb: {fileID: 4900706385951625127}
   chatInput: {fileID: 1712932772}
@@ -847,13 +848,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1aa08ab6e0800fa44ae55d278d1423e3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_Content: {fileID: 0}
+  m_Content: {fileID: 7663626500279300715}
   m_Horizontal: 0
   m_Vertical: 1
   m_MovementType: 1
   m_Elasticity: 0.1
   m_Inertia: 1
-  m_DecelerationRate: 0.135
+  m_DecelerationRate: 10
   m_ScrollSensitivity: 1
   m_Viewport: {fileID: 0}
   m_HorizontalScrollbar: {fileID: 0}

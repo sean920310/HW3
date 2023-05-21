@@ -9,6 +9,7 @@ public class ChatManager : MonoBehaviour
 {
     public static ChatManager instance;
 
+    [SerializeField] private RectTransform messagePanel;
     [SerializeField] private RectTransform messageContent;
     [SerializeField] private RectTransform messageElementPrefeb;
     [SerializeField] private TMP_InputField chatInput;
@@ -35,9 +36,18 @@ public class ChatManager : MonoBehaviour
             chatInput.text = null;
         }
         if (!chatInput.isFocused && Input.GetKeyDown(KeyCode.Return))
+        {
             chatInput.ActivateInputField();
-        if (chatInput.isFocused && Input.GetKeyDown(KeyCode.Escape))
+            messagePanel.gameObject.SetActive(true);
+            chatInput.gameObject.SetActive(true);
+        }
+        if (/*chatInput.isFocused && */Input.GetKeyDown(KeyCode.Escape))
+        {
             chatInput.DeactivateInputField();
+
+            messagePanel.gameObject.SetActive(false);
+            chatInput.gameObject.SetActive(false);
+        }
     }
 
     public void SendMessageToChat(string message)
@@ -54,6 +64,8 @@ public class ChatManager : MonoBehaviour
         foreach (var item in messageList)
         {
             RectTransform tmpMsg = Instantiate(messageElementPrefeb);
+            tmpMsg.gameObject.SetActive(true);
+            tmpMsg.GetComponentInChildren<TextMeshProUGUI>().text = item.ToString();
             tmpMsg.SetParent(messageContent);
         }
     }
@@ -65,7 +77,7 @@ public class ChatManager : MonoBehaviour
     void RpcSendMessageToChat(string message, PhotonMessageInfo info)
     {
         messageList.Add(info.Sender.NickName + " : " + message);
-        if (messageList.Count > 12)
+        if (messageList.Count > 100)
             messageList.RemoveAt(0);
         UpdateChatText();
     }
