@@ -23,10 +23,6 @@ public class GameSettingsManager : MonoBehaviour
     public GameSettingsData settingsData;
     private FileDataHandler dataHandler;
 
-    [Header("Game Settings")]
-    [SerializeField] AudioSettingsManager audioSettings;
-
-
     private void Awake()
     {
 
@@ -41,7 +37,6 @@ public class GameSettingsManager : MonoBehaviour
 
 
         this.dataHandler = new FileDataHandler(Application.persistentDataPath, fileName, useEncryption);
-
         //this.selectedProfileId = dataHandler.GetMostRecentlyUpdatedProfileId();
     }
 
@@ -53,6 +48,7 @@ public class GameSettingsManager : MonoBehaviour
 
     private void LoadSettings()
     {
+        Debug.Log("Loading Settings");
         // load any saved data from a file using the data handler
         dataHandler.Load(selectedProfileId, out this.settingsData);
 
@@ -74,17 +70,15 @@ public class GameSettingsManager : MonoBehaviour
         {
             dataPersistenceObj.LoadData(settingsData);
         }
-
-        UpdateGameSettings();
     }
 
     public void UpdateWithSettings()
     {
 
-        //if (Screen.fullScreen != settingsData.fullscreen || settingsData.resolutionWidth != Screen.currentResolution.width || settingsData.resolutionHeight != Screen.currentResolution.height)
-        //{
-        //    Screen.SetResolution(settingsData.resolutionWidth, settingsData.resolutionHeight, settingsData.fullscreen);
-        //}
+        if (Screen.fullScreen != settingsData.fullscreen || settingsData.resolutionWidth != Screen.currentResolution.width || settingsData.resolutionHeight != Screen.currentResolution.height)
+        {
+            Screen.SetResolution(settingsData.resolutionWidth, settingsData.resolutionHeight, settingsData.fullscreen);
+        }
     }
 
     private void NewSettings()
@@ -140,14 +134,6 @@ public class GameSettingsManager : MonoBehaviour
         return new List<ISettingsDataPersistence>(dataPersistenceObjects);
     }
 
-    public void UpdateGameSettings()
-    {
-        audioSettings.SetMasterVolume(settingsData.MasterVolume);
-        audioSettings.SetMusicVolume(settingsData.MusicVolume);
-        audioSettings.SetUIVolume(settingsData.UIVolume);
-        audioSettings.SetSoundVolume(settingsData.SoundVolume);
-    }
-
     public void Update()
     {
         UpdateWithSettings();
@@ -160,6 +146,4 @@ public class GameSettingsManager : MonoBehaviour
     {
         SaveSettings();
     }
-
-
 }

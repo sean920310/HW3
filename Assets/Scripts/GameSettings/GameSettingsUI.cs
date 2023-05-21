@@ -4,11 +4,27 @@ using UnityEngine;
 
 public class GameSettingsUI : MonoBehaviour
 {
+    private bool isOpen = false;
+
     [SerializeField] GameObject GeneralPanel;
     [SerializeField] GameObject AudioPanel;
     [SerializeField] GameObject ControlsPanel;
     [SerializeField] GameObject VideoPanel;
     [SerializeField] GameObject MultiplayerPanel;
+    private void Update()
+    {
+        //if(gameObject.activeSelf)
+        //{
+        //    isOpen = true;
+        //}
+        //else
+        //{
+        //    if (isOpen)
+        //        GameSettingsManager.instance.SaveSettings();
+
+        //    isOpen = false;
+        //}
+    }
 
     public void onGeneralBTNClick()
     {
