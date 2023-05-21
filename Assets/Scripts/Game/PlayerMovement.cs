@@ -95,7 +95,7 @@ public class PlayerMovement : MonoBehaviour
                 }
 
                 BallManager.Instance.SetPosition(LeftHand.position);
-                BallManager.Instance.SetRotation(LeftHand.rotation);
+                //BallManager.Instance.SetRotation(LeftHand.rotation);
                 BallManager.Instance.SetVelocity(Vector3.zero);
 
                 if (swinUpInputFlag && CanSwin)

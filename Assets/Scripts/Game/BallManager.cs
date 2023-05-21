@@ -89,6 +89,11 @@ public class BallManager : MonoBehaviour, IPunObservable
         if(pv) pv.RPC("RpcUpdateBallState", RpcTarget.Others, (int)state);
     }
 
+    public BallStates GetState()
+    {
+        return ballStates;
+    }
+
     public bool IsInState(BallStates states)
     {
         return ballStates == states;

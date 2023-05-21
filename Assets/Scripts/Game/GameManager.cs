@@ -32,6 +32,11 @@ public class GameManager : MonoBehaviour
     [SerializeField] int winScore;
     [SerializeField] bool neverFinish; // Endless if true
 
+    public bool ReplayOn = false;
+    [SerializeField] RectTransform replayPanel;
+    [SerializeField] Text replayText;
+    [SerializeField] ReplayManager replayManager;
+
     [Header("GameObject")]
     [SerializeField] public GameObject Player1;
     [SerializeField] public GameObject Player2;
@@ -66,7 +71,6 @@ public class GameManager : MonoBehaviour
     private PlayerInformationManager Player2Info;
     private Transform Player1HatPoint;
     private Transform Player2HatPoint;
-
     private void Awake()
     {
         if (instance != null)
@@ -130,7 +134,7 @@ public class GameManager : MonoBehaviour
         Player1Info.Info.score++;
 
         // UI Update
-        HUD.P1IsAboutToWin = (Player1Info.Info.score == winScore - 1); 
+        HUD.P1IsAboutToWin = (Player1Info.Info.score == winScore - 1);
         HUD.ScorePanelUpdate(Player1Info.Info.score, Player2Info.Info.score);
         HUD.SetServeHint(true, false);
 
@@ -151,10 +155,31 @@ public class GameManager : MonoBehaviour
         // Check if the game over condition has been satisfied.
         if (CheckIsGameover())
         {
-            if (isMultiplayer)
-                PhotonManager.Instance.GameOver();
+            if (ReplayOn)
+                StartCoroutine(GameOverWithReplay());
             else
-                GameOver();
+            {
+                if (isMultiplayer)
+                    PhotonManager.Instance.GameOver();
+                else
+                    GameOver();
+            }
+        }
+        else
+        {
+            if (ReplayOn)
+            {
+                if (replayManager.recording)
+                {
+                    replayManager.StartStopRecording();
+
+                    replayManager.StartStopRecording();
+                }
+                else
+                {
+                    replayManager.StartStopRecording();
+                }
+            }
         }
     }
 
@@ -185,10 +210,31 @@ public class GameManager : MonoBehaviour
         // Check if the game over condition has been satisfied.
         if (CheckIsGameover())
         {
-            if (isMultiplayer)
-                PhotonManager.Instance.GameOver();
+            if (ReplayOn)
+                StartCoroutine(GameOverWithReplay());
             else
-                GameOver();
+            {
+                if (isMultiplayer)
+                    PhotonManager.Instance.GameOver();
+                else
+                    GameOver();
+            }
+        }
+        else
+        {
+            if (ReplayOn)
+            {
+                if (replayManager.recording)
+                {
+                    replayManager.StartStopRecording();
+
+                    replayManager.StartStopRecording();
+                }
+                else
+                {
+                    replayManager.StartStopRecording();
+                }
+            }
         }
     }
 
@@ -198,9 +244,14 @@ public class GameManager : MonoBehaviour
         {
             Player1Movement.SetPlayerServe(true);
         }
-        else if (ServePlayer == Players.Player2)
+        else if(ServePlayer == Players.Player2)
         {
             Player2Movement.SetPlayerServe(true);
+        }
+        else
+        {
+            Player2Movement.SetPlayerServe(false);
+            Player2Movement.SetPlayerServe(false);
         }
         Serving = ServePlayer;
     }
@@ -229,12 +280,39 @@ public class GameManager : MonoBehaviour
         Player1Movement.ResetInputFlag();
         Player2Movement.ResetInputFlag();
     }
+    IEnumerator GameOverWithReplay()
+    {
 
+        if (replayManager.recording)
+            replayManager.StartStopRecording();
+        HUD.gameObject.SetActive(false);
+        gameState = GameStates.GameOver;
+        //Player1Movement.enabled = false;
+        //Player2Movement.enabled = false;
+        Player1Movement.GetComponent<BotManager>().enabled = false;
+        Player2Movement.GetComponent<BotManager>().enabled = false;
+        BallManager.Instance.GetComponent<TrailRenderer>().enabled = true;
+        BallManager.Instance.enabled = false;
+
+        replayPanel.gameObject.SetActive(true);
+        replayText.text = "Replaying...";
+
+        SetServePlayer(Players.None);
+
+        replayManager.StartStopReplaying();
+        while (replayManager.replaying)
+        {
+            yield return null;
+        }
+        HUD.gameObject.SetActive(true);
+        replayPanel.gameObject.SetActive(false);
+
+        GameOver();
+    }
     public void GameOver()
     {
         gameState = GameStates.GameOver;
-
-
+        
         // Set Animator UpdateMode to UnscaledTime inorder to play dance animation.
         Player1Movement.animator.updateMode = AnimatorUpdateMode.UnscaledTime;
         Player2Movement.animator.updateMode = AnimatorUpdateMode.UnscaledTime;

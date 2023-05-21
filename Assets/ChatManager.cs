@@ -9,7 +9,8 @@ public class ChatManager : MonoBehaviour
 {
     public static ChatManager instance;
 
-    [SerializeField] private TMP_Text chatText;
+    [SerializeField] private RectTransform messageContent;
+    [SerializeField] private RectTransform messageElementPrefeb;
     [SerializeField] private TMP_InputField chatInput;
 
     private PhotonView pv;
@@ -46,7 +47,15 @@ public class ChatManager : MonoBehaviour
 
     public void UpdateChatText()
     {
-        chatText.text = string.Join('\n', messageList);
+        foreach (Transform child in transform)
+        {
+            Destroy(child.gameObject);
+        }
+        foreach (var item in messageList)
+        {
+            RectTransform tmpMsg = Instantiate(messageElementPrefeb);
+            tmpMsg.SetParent(messageContent);
+        }
     }
 
 
