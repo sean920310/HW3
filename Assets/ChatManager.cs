@@ -47,7 +47,7 @@ public class ChatManager : MonoBehaviour
 
     public void UpdateChatText()
     {
-        foreach (Transform child in transform)
+        foreach (Transform child in messageContent)
         {
             Destroy(child.gameObject);
         }
