@@ -1176,6 +1176,10 @@ MonoBehaviour:
   gameState: 0
   winScore: 0
   neverFinish: 0
+  ReplayOn: 0
+  replayPanel: {fileID: 0}
+  replayText: {fileID: 0}
+  replayManager: {fileID: 0}
   Player1: {fileID: 0}
   Player2: {fileID: 0}
   ServeBorderL: {fileID: 468233089}
