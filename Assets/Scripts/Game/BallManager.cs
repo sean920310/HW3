@@ -411,7 +411,7 @@ public class BallManager : MonoBehaviour, IPunObservable
             rb.velocity = (Vector3)stream.ReceiveNext();
 
             float lag = Mathf.Abs((float)(PhotonNetwork.Time - info.timestamp));
-            rb.position += rb.velocity * lag;
+            rb.position += rb.velocity * (1 - lag * rb.drag);
         }
     }
 
