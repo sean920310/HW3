@@ -24,8 +24,8 @@ public class CharacterSlot : MonoBehaviour
     }
     public void LoadSettings()
     {
-        player1currentHatIdx = PlayerPrefs.HasKey("player1HatIdx") ? PlayerPrefs.GetInt("P1Bot") : 0;
-        player2currentHatIdx = PlayerPrefs.HasKey("player2HatIdx") ? PlayerPrefs.GetInt("P2Bot") : 0;
+        player1currentHatIdx = PlayerPrefs.HasKey("player1HatIdx") ? PlayerPrefs.GetInt("player1HatIdx") : 0;
+        player2currentHatIdx = PlayerPrefs.HasKey("player2HatIdx") ? PlayerPrefs.GetInt("player2HatIdx") : 0;
         PlayerPrefs.Save();
     }
     public void ResetSettings()
@@ -57,6 +57,7 @@ public class CharacterSlot : MonoBehaviour
             Mathf.Clamp(player2currentHatIdx, 0, HatList.Length - 1);
             p2SlotUI.UIUpdate(player2currentHatIdx);
         }
+        SaveSettings();
 
     }
     public void OnRightBtnClick(int player)
@@ -73,7 +74,7 @@ public class CharacterSlot : MonoBehaviour
             Mathf.Clamp(player2currentHatIdx, 0 , HatList.Length - 1);
             p2SlotUI.UIUpdate(player2currentHatIdx);
         }
-
+        SaveSettings();
     }
 
     public void UpdateUI()
