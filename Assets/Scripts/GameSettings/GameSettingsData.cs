@@ -30,7 +30,7 @@ public class GameSettingsData
     {
 
         tutorial = true;
-        singleplayerMobile = true;
+        singleplayerMobile = false;
 
         MasterVolume = 1.0f;
         MusicVolume  = 1.0f;

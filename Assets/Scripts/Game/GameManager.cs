@@ -316,7 +316,7 @@ public class GameManager : MonoBehaviour
 
         if (SceneManager.GetActiveScene().buildIndex == 5)
         {
-            MobileInputPanel.gameObject.SetActive(true);
+            MobileInputPanel.gameObject.SetActive(false);
         }
 
         gameState = GameStates.GameOver;
