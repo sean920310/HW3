@@ -32,6 +32,11 @@ public class GameManager : MonoBehaviour
     [SerializeField] int winScore;
     [SerializeField] bool neverFinish; // Endless if true
 
+    public bool ReplayOn = false;
+    [SerializeField] RectTransform replayPanel;
+    [SerializeField] Text replayText;
+    [SerializeField] ReplayManager replayManager;
+
     [Header("GameObject")]
     [SerializeField] public GameObject Player1;
     [SerializeField] public GameObject Player2;
@@ -66,7 +71,6 @@ public class GameManager : MonoBehaviour
     private PlayerInformationManager Player2Info;
     private Transform Player1HatPoint;
     private Transform Player2HatPoint;
-
     private void Awake()
     {
         if (instance != null)
@@ -130,7 +134,7 @@ public class GameManager : MonoBehaviour
         Player1Info.Info.score++;
 
         // UI Update
-        HUD.P1IsAboutToWin = (Player1Info.Info.score == winScore - 1); 
+        HUD.P1IsAboutToWin = (Player1Info.Info.score == winScore - 1);
         HUD.ScorePanelUpdate(Player1Info.Info.score, Player2Info.Info.score);
         HUD.SetServeHint(true, false);
 
@@ -151,10 +155,31 @@ public class GameManager : MonoBehaviour
         // Check if the game over condition has been satisfied.
         if (CheckIsGameover())
         {
-            if (isMultiplayer)
-                PhotonManager.Instance.GameOver();
+            if (ReplayOn)
+                StartCoroutine(GameOverWithReplay());
             else
-                GameOver();
+            {
+                if (isMultiplayer)
+                    PhotonManager.Instance.GameOver();
+                else
+                    GameOver();
+            }
+        }
+        else
+        {
+            if (ReplayOn)
+            {
+                if (replayManager.recording)
+                {
+                    replayManager.StartStopRecording();
+
+                    replayManager.StartStopRecording();
+                }
+                else
+                {
+                    replayManager.StartStopRecording();
+                }
+            }
         }
     }
 
@@ -185,10 +210,31 @@ public class GameManager : MonoBehaviour
         // Check if the game over condition has been satisfied.
         if (CheckIsGameover())
         {
-            if (isMultiplayer)
-                PhotonManager.Instance.GameOver();
+            if (ReplayOn)
+                StartCoroutine(GameOverWithReplay());
             else
-                GameOver();
+            {
+                if (isMultiplayer)
+                    PhotonManager.Instance.GameOver();
+                else
+                    GameOver();
+            }
+        }
+        else
+        {
+            if (ReplayOn)
+            {
+                if (replayManager.recording)
+                {
+                    replayManager.StartStopRecording();
+
+                    replayManager.StartStopRecording();
+                }
+                else
+                {
+                    replayManager.StartStopRecording();
+                }
+            }
         }
     }
 
@@ -198,9 +244,14 @@ public class GameManager : MonoBehaviour
         {
             Player1Movement.SetPlayerServe(true);
         }
-        else
+        else if(ServePlayer == Players.Player2)
         {
             Player2Movement.SetPlayerServe(true);
+        }
+        else
+        {
+            Player2Movement.SetPlayerServe(false);
+            Player2Movement.SetPlayerServe(false);
         }
         Serving = ServePlayer;
     }
@@ -229,12 +280,39 @@ public class GameManager : MonoBehaviour
         Player1Movement.ResetInputFlag();
         Player2Movement.ResetInputFlag();
     }
+    IEnumerator GameOverWithReplay()
+    {
 
+        if (replayManager.recording)
+            replayManager.StartStopRecording();
+        HUD.gameObject.SetActive(false);
+        gameState = GameStates.GameOver;
+        //Player1Movement.enabled = false;
+        //Player2Movement.enabled = false;
+        Player1Movement.GetComponent<BotManager>().enabled = false;
+        Player2Movement.GetComponent<BotManager>().enabled = false;
+        BallManager.Instance.GetComponent<TrailRenderer>().enabled = true;
+        BallManager.Instance.enabled = false;
+
+        replayPanel.gameObject.SetActive(true);
+        replayText.text = "Replaying...";
+
+        SetServePlayer(Players.None);
+
+        replayManager.StartStopReplaying();
+        while (replayManager.replaying)
+        {
+            yield return null;
+        }
+        HUD.gameObject.SetActive(true);
+        replayPanel.gameObject.SetActive(false);
+
+        GameOver();
+    }
     public void GameOver()
     {
         gameState = GameStates.GameOver;
-
-
+        
         // Set Animator UpdateMode to UnscaledTime inorder to play dance animation.
         Player1Movement.animator.updateMode = AnimatorUpdateMode.UnscaledTime;
         Player2Movement.animator.updateMode = AnimatorUpdateMode.UnscaledTime;
@@ -315,6 +393,20 @@ public class GameManager : MonoBehaviour
         PausePanel.gameObject.SetActive(true);
     }
 
+    public void SetHat()
+    {
+        if (CharacterSlot.HatList[CharacterSlot.player1currentHatIdx].hatData.HatPrefab != null)
+        {
+            GameObject tmpHatPrefab = GameObject.Instantiate(CharacterSlot.HatList[CharacterSlot.player1currentHatIdx].hatData.HatPrefab);
+            tmpHatPrefab.transform.SetParent(Player1HatPoint, false);
+        }
+        if (CharacterSlot.HatList[CharacterSlot.player2currentHatIdx].hatData.HatPrefab != null)
+        {
+            GameObject tmpHatPrefab = GameObject.Instantiate(CharacterSlot.HatList[CharacterSlot.player2currentHatIdx].hatData.HatPrefab);
+            tmpHatPrefab.transform.SetParent(Player2HatPoint, false);
+        }
+    }
+
     private void Resume()
     {
         gameState = GameStates.InGame;
@@ -368,9 +460,9 @@ public class GameManager : MonoBehaviour
         GameStart();
     }
 
-    public void MultiplayerStart()
+    public void MultiplayerStart(Players initServing = Players.Player1)
     {
-        GameStart(true);
+        GameStart(true, initServing);
     }
 
     public void EndServe()
@@ -378,9 +470,10 @@ public class GameManager : MonoBehaviour
         HUD.SetServeHint(false, false);
         Player1Movement.SetPlayerServe(false);
         Player2Movement.SetPlayerServe(false);
+        Serving = Players.None;
     }
 
-    private void GameStart(bool _isMultiplayer = false)
+    private void GameStart(bool _isMultiplayer = false, Players initServing = Players.Player1)
     {
         isMultiplayer = _isMultiplayer;
         if (Player1)
@@ -407,16 +500,7 @@ public class GameManager : MonoBehaviour
         Player2Info.Info.name = gameStarManager.Player2NameInput.text;
 
         // Set Hat.
-        if (CharacterSlot.HatList[CharacterSlot.player1currentHatIdx].hatData.HatPrefab != null)
-        {
-            GameObject tmpHatPrefab = GameObject.Instantiate(CharacterSlot.HatList[CharacterSlot.player1currentHatIdx].hatData.HatPrefab);
-            tmpHatPrefab.transform.SetParent(Player1HatPoint, false);
-        }
-        if (CharacterSlot.HatList[CharacterSlot.player2currentHatIdx].hatData.HatPrefab != null)
-        {
-            GameObject tmpHatPrefab = GameObject.Instantiate(CharacterSlot.HatList[CharacterSlot.player2currentHatIdx].hatData.HatPrefab);
-            tmpHatPrefab.transform.SetParent(Player2HatPoint, false);
-        }
+        SetHat();
 
         // Ser Winning Score.
         if (gameStarManager.scoreToWin.options.ToArray()[gameStarManager.scoreToWin.value].text != "Endless")
@@ -431,8 +515,13 @@ public class GameManager : MonoBehaviour
         BallManager.Instance.gameObject.SetActive(true);
 
         // Set Player State 
-        SetServePlayer(Players.Player1);
-        HUD.SetServeHint(true, false);
+        SetServePlayer(initServing);
+        if(initServing == Players.Player1)
+            HUD.SetServeHint(true, false);
+        else if (initServing == Players.Player2)
+            HUD.SetServeHint(false, true);
+        else
+            HUD.SetServeHint(false, false);
 
         Player1Movement.transform.localPosition = new Vector3(-3, 1.06f, 0);
         Player2Movement.transform.localPosition = new Vector3(3, 1.06f, 0);
@@ -442,7 +531,8 @@ public class GameManager : MonoBehaviour
         // Set ball Serve State to true
         BallManager.Instance.SwitchState(BallManager.BallStates.Serving);
 
-        ServeBorderActive(true);
+        if(initServing != Players.None)
+            ServeBorderActive(true);
 
         // HUD Update
         HUD.ScorePanelUpdate(Player1Info.Info.score, Player2Info.Info.score);

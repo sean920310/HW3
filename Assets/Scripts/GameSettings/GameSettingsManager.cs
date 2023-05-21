@@ -81,10 +81,10 @@ public class GameSettingsManager : MonoBehaviour
     public void UpdateWithSettings()
     {
 
-        if (Screen.fullScreen != settingsData.fullscreen || settingsData.resolutionWidth != Screen.currentResolution.width || settingsData.resolutionHeight != Screen.currentResolution.height)
-        {
-            Screen.SetResolution(settingsData.resolutionWidth, settingsData.resolutionHeight, settingsData.fullscreen);
-        }
+        //if (Screen.fullScreen != settingsData.fullscreen || settingsData.resolutionWidth != Screen.currentResolution.width || settingsData.resolutionHeight != Screen.currentResolution.height)
+        //{
+        //    Screen.SetResolution(settingsData.resolutionWidth, settingsData.resolutionHeight, settingsData.fullscreen);
+        //}
     }
 
     private void NewSettings()
