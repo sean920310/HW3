@@ -29,13 +29,15 @@ public class GeneralSettingsUI : MonoBehaviour, ISettingsDataPersistence
     // Start is called before the first frame update
     void Start()
     {
-        //TutorialToggle.onValueChanged.AddListener(delegate {
-        //    GameSettingsManager.instance.settingsData.tutorial = TutorialToggle.isOn;
-        //});
+        TutorialToggle.onValueChanged.AddListener(delegate
+        {
+            GameSettingsManager.instance.settingsData.tutorial = TutorialToggle.isOn;
+        });
 
-        //SingleplayerMobileToggle.onValueChanged.AddListener(delegate {
-        //    GameSettingsManager.instance.settingsData.singleplayerMobile = SingleplayerMobileToggle.isOn;
-        //});
+        SingleplayerMobileToggle.onValueChanged.AddListener(delegate
+        {
+            GameSettingsManager.instance.settingsData.singleplayerMobile = SingleplayerMobileToggle.isOn;
+        });
 
     }
 
