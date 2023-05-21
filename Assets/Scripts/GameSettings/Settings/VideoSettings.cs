@@ -25,7 +25,7 @@ public class VideoSettings : MonoBehaviour, ISettingsDataPersistence
         //if (data.fullscreen) Screen.fullScreenMode = FullScreenMode.ExclusiveFullScreen;
         //else Screen.fullScreenMode = FullScreenMode.Windowed;
 
-        Screen.SetResolution(data.resolutionWidth, data.resolutionHeight, data.fullscreen);
+        //Screen.SetResolution(data.resolutionWidth, data.resolutionHeight, data.fullscreen);
 
     }
 
@@ -76,14 +76,14 @@ public class VideoSettings : MonoBehaviour, ISettingsDataPersistence
 
     public void SetResolution(int resolutionIdx)
     {
-        if(filterResolutions.Count > resolutionIdx)
-        {
+        //if(filterResolutions.Count > resolutionIdx)
+        //{
             Resolution resolution = filterResolutions[resolutionIdx];
-            Screen.SetResolution(resolution.width, resolution.height, FullScreenToggle.isOn);
+            //Screen.SetResolution(resolution.width, resolution.height, FullScreenToggle.isOn);
 
             settingsData.resolutionWidth = resolution.width;
             settingsData.resolutionHeight = resolution.height;
-        }
+        //}
     }
 
     public void SaveData()

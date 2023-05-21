@@ -10,6 +10,7 @@ public class GameSettingsData
 
     // General
     [SerializeField] public bool tutorial;
+    [SerializeField] public bool singleplayerMobile;
 
     // Audio
     [SerializeField] public float MasterVolume;
@@ -29,6 +30,7 @@ public class GameSettingsData
     {
 
         tutorial = true;
+        singleplayerMobile = false;
 
         MasterVolume = 1.0f;
         MusicVolume  = 1.0f;

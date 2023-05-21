@@ -46,7 +46,12 @@ public class MenuUIManager : MonoBehaviour
         if(tutorialToggle.isOn)
             loadingScene.LoadScene(4);
         else
-            loadingScene.LoadScene(1);
+        {
+            if(GameSettingsManager.instance.settingsData.singleplayerMobile)
+                loadingScene.LoadScene(5);
+            else
+                loadingScene.LoadScene(1);
+        }
     }
     public void onMultiplayerBTNClick()
     {

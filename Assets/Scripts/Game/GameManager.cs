@@ -51,6 +51,8 @@ public class GameManager : MonoBehaviour
     [SerializeField] RectTransform PausePanel;
     [SerializeField] RectTransform GameStartPanel;
 
+    [SerializeField] RectTransform MobileInputPanel;
+
     [Header("Audio")]
     [SerializeField] AudioSource PlayerOneWinSound;
     [SerializeField] AudioSource PlayerTwoWinSound;
@@ -108,7 +110,7 @@ public class GameManager : MonoBehaviour
     {
         if (Input.GetKeyDown(KeyCode.Escape))
         {
-            if(gameState != GameStates.GamePreparing || TutorialManager.Instance != null)
+            if(gameState != GameStates.GameOver || gameState != GameStates.GamePreparing || TutorialManager.Instance != null)
             {
                 if (gameState == GameStates.GamePause) Resume();
                 else Pause();
@@ -311,6 +313,12 @@ public class GameManager : MonoBehaviour
     }
     public void GameOver()
     {
+
+        if (SceneManager.GetActiveScene().buildIndex == 5)
+        {
+            MobileInputPanel.gameObject.SetActive(false);
+        }
+
         gameState = GameStates.GameOver;
         
         // Set Animator UpdateMode to UnscaledTime inorder to play dance animation.
@@ -391,6 +399,23 @@ public class GameManager : MonoBehaviour
         gameState = GameStates.GamePause;
         //Time.timeScale = 0.0f;
         PausePanel.gameObject.SetActive(true);
+
+        if(SceneManager.GetActiveScene().buildIndex == 5) 
+        {
+            MobileInputPanel.gameObject.SetActive(false) ;
+        }
+    }
+
+    private void Resume()
+    {
+        gameState = GameStates.InGame;
+        Time.timeScale = 1.0f;
+        PausePanel.gameObject.SetActive(false);
+
+        if (SceneManager.GetActiveScene().buildIndex == 5)
+        {
+            MobileInputPanel.gameObject.SetActive(true);
+        }
     }
 
     public void SetHat()
@@ -405,13 +430,6 @@ public class GameManager : MonoBehaviour
             GameObject tmpHatPrefab = GameObject.Instantiate(CharacterSlot.HatList[CharacterSlot.player2currentHatIdx].hatData.HatPrefab);
             tmpHatPrefab.transform.SetParent(Player2HatPoint, false);
         }
-    }
-
-    private void Resume()
-    {
-        gameState = GameStates.InGame;
-        Time.timeScale = 1.0f;
-        PausePanel.gameObject.SetActive(false);
     }
 
     IEnumerator PlayerMovementDisableForAWhile(float delay)
@@ -549,6 +567,12 @@ public class GameManager : MonoBehaviour
         Time.timeScale = 1.0f;
 
         gameState = GameStates.InGame;
+
+
+        if (SceneManager.GetActiveScene().buildIndex == 5)
+        {
+            MobileInputPanel.gameObject.SetActive(true);
+        }
     }
 
     // Pause Panel
