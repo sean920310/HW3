@@ -71,7 +71,7 @@ public class PlayerMovement : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if(!pv || pv.IsMine)
+        if((!pv || pv.IsMine))
         {
             // Check On Ground
             onGround = Physics.Raycast(GroundChk.position, Vector3.down, 0.02f, WhatIsGround);
@@ -94,9 +94,12 @@ public class PlayerMovement : MonoBehaviour
                     animator.SetBool("ServePrepare", true);
                 }
 
-                BallManager.Instance.SetPosition(LeftHand.position);
-                //BallManager.Instance.SetRotation(LeftHand.rotation);
-                BallManager.Instance.SetVelocity(Vector3.zero);
+                if(GameManager.instance.gameState != GameManager.GameStates.Replaying)
+                {
+                    BallManager.Instance.SetPosition(LeftHand.position);
+                    //BallManager.Instance.SetRotation(LeftHand.rotation);
+                    BallManager.Instance.SetVelocity(Vector3.zero);
+                }
 
                 if (swinUpInputFlag && CanSwin)
                 {

@@ -154,9 +154,9 @@ public class ReplayManager : MonoBehaviour
 
         if (transform.tag == "Ball")
         {
-            binaryWriter.Write(transform.rotation.x);
-            binaryWriter.Write(transform.rotation.y);
-            binaryWriter.Write(transform.rotation.z);
+            binaryWriter.Write(transform.rotation.eulerAngles.x);
+            binaryWriter.Write(transform.rotation.eulerAngles.y);
+            binaryWriter.Write(transform.rotation.eulerAngles.z);
         }
 
         binaryWriter.Write(transform.localScale.x);

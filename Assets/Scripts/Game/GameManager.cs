@@ -15,6 +15,7 @@ public class GameManager : MonoBehaviour
         GamePreparing,
         InGame,
         GamePause,
+        Replaying,
         GameOver,
     }
     public enum Players
