@@ -32,8 +32,10 @@ public class GameManager : MonoBehaviour
     [SerializeField] int winScore;
     [SerializeField] bool neverFinish; // Endless if true
 
-    [SerializeField] ReplayManager replayManager;
     public bool ReplayOn = false;
+    [SerializeField] RectTransform replayPanel;
+    [SerializeField] Text replayText;
+    [SerializeField] ReplayManager replayManager;
 
     [Header("GameObject")]
     [SerializeField] public GameObject Player1;
@@ -283,13 +285,17 @@ public class GameManager : MonoBehaviour
 
         if (replayManager.recording)
             replayManager.StartStopRecording();
-
+        HUD.gameObject.SetActive(false);
         gameState = GameStates.GameOver;
         //Player1Movement.enabled = false;
         //Player2Movement.enabled = false;
         Player1Movement.GetComponent<BotManager>().enabled = false;
         Player2Movement.GetComponent<BotManager>().enabled = false;
+        BallManager.Instance.GetComponent<TrailRenderer>().enabled = true;
         BallManager.Instance.enabled = false;
+
+        replayPanel.gameObject.SetActive(true);
+        replayText.text = "Replaying...";
 
         SetServePlayer(Players.None);
 
@@ -298,6 +304,9 @@ public class GameManager : MonoBehaviour
         {
             yield return null;
         }
+        HUD.gameObject.SetActive(true);
+        replayPanel.gameObject.SetActive(false);
+
         GameOver();
     }
     public void GameOver()

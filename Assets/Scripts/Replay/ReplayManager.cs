@@ -152,11 +152,11 @@ public class ReplayManager : MonoBehaviour
         binaryWriter.Write(transform.localPosition.y);
         binaryWriter.Write(transform.localPosition.z);
 
-        if (transform.GetComponent<BallManager>())
+        if (transform.tag == "Ball")
         {
-            binaryWriter.Write(transform.localRotation.x);
-            binaryWriter.Write(transform.localRotation.y);
-            binaryWriter.Write(transform.localRotation.z);
+            binaryWriter.Write(transform.rotation.x);
+            binaryWriter.Write(transform.rotation.y);
+            binaryWriter.Write(transform.rotation.z);
         }
 
         binaryWriter.Write(transform.localScale.x);
@@ -180,12 +180,12 @@ public class ReplayManager : MonoBehaviour
         float z = binaryReader.ReadSingle();
         transform.localPosition = new Vector3(x, y, z);
 
-        if (transform.GetComponent<BallManager>())
+        if (transform.tag == "Ball")
         {
             x = binaryReader.ReadSingle();
             y = binaryReader.ReadSingle();
             z = binaryReader.ReadSingle();
-            transform.localRotation = Quaternion.Euler(x, y, z);
+            transform.rotation = Quaternion.Euler(x, y, z);
         }
 
         x = binaryReader.ReadSingle();

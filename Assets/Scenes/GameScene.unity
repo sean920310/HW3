@@ -776,6 +776,17 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 354cd1b48dcaee348b80a6bad60693de, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &116190146 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 7576911949103763341, guid: 8c48b2846f42d9244aaa3c6f09d22c90, type: 3}
+  m_PrefabInstance: {fileID: 697424055}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5f7201a12d95ffc409449d95f23cf332, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &123050499
 GameObject:
   m_ObjectHideFlags: 0
@@ -1450,8 +1461,10 @@ MonoBehaviour:
   gameState: 0
   winScore: 0
   neverFinish: 0
-  replayManager: {fileID: 234814736}
   ReplayOn: 1
+  replayPanel: {fileID: 697424056}
+  replayText: {fileID: 116190146}
+  replayManager: {fileID: 234814736}
   Player1: {fileID: 846389454}
   Player2: {fileID: 758331623}
   ServeBorderL: {fileID: 468233089}
@@ -18253,9 +18266,33 @@ PrefabInstance:
       propertyPath: startStopReplayButtonText
       value: 
       objectReference: {fileID: 2147395187}
+    - target: {fileID: 7576911949103763328, guid: 8c48b2846f42d9244aaa3c6f09d22c90, type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 7576911949103763341, guid: 8c48b2846f42d9244aaa3c6f09d22c90, type: 3}
+      propertyPath: m_Text
+      value: Replaying
+      objectReference: {fileID: 0}
+    - target: {fileID: 7576911949103763341, guid: 8c48b2846f42d9244aaa3c6f09d22c90, type: 3}
+      propertyPath: m_FontData.m_MaxSize
+      value: 65
+      objectReference: {fileID: 0}
+    - target: {fileID: 7576911949103763341, guid: 8c48b2846f42d9244aaa3c6f09d22c90, type: 3}
+      propertyPath: m_FontData.m_FontSize
+      value: 55
+      objectReference: {fileID: 0}
     - target: {fileID: 7576911949867975752, guid: 8c48b2846f42d9244aaa3c6f09d22c90, type: 3}
       propertyPath: m_Name
       value: ReplaySystemPanel
+      objectReference: {fileID: 0}
+    - target: {fileID: 7576911949867975752, guid: 8c48b2846f42d9244aaa3c6f09d22c90, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7576911949867975754, guid: 8c48b2846f42d9244aaa3c6f09d22c90, type: 3}
+      propertyPath: m_Color.a
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 7576911949867975755, guid: 8c48b2846f42d9244aaa3c6f09d22c90, type: 3}
       propertyPath: m_Pivot.x
@@ -18271,7 +18308,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7576911949867975755, guid: 8c48b2846f42d9244aaa3c6f09d22c90, type: 3}
       propertyPath: m_AnchorMax.x
-      value: 0
+      value: 0.5
       objectReference: {fileID: 0}
     - target: {fileID: 7576911949867975755, guid: 8c48b2846f42d9244aaa3c6f09d22c90, type: 3}
       propertyPath: m_AnchorMax.y
@@ -18279,7 +18316,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7576911949867975755, guid: 8c48b2846f42d9244aaa3c6f09d22c90, type: 3}
       propertyPath: m_AnchorMin.x
-      value: 0
+      value: 0.5
       objectReference: {fileID: 0}
     - target: {fileID: 7576911949867975755, guid: 8c48b2846f42d9244aaa3c6f09d22c90, type: 3}
       propertyPath: m_AnchorMin.y
@@ -18323,11 +18360,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7576911949867975755, guid: 8c48b2846f42d9244aaa3c6f09d22c90, type: 3}
       propertyPath: m_AnchoredPosition.x
-      value: 0
+      value: -125
       objectReference: {fileID: 0}
     - target: {fileID: 7576911949867975755, guid: 8c48b2846f42d9244aaa3c6f09d22c90, type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: 0
+      value: -37
       objectReference: {fileID: 0}
     - target: {fileID: 7576911949867975755, guid: 8c48b2846f42d9244aaa3c6f09d22c90, type: 3}
       propertyPath: m_LocalEulerAnglesHint.x
@@ -18341,6 +18378,18 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 7576911950201714526, guid: 8c48b2846f42d9244aaa3c6f09d22c90, type: 3}
+      propertyPath: m_Color.a
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7576911950213894527, guid: 8c48b2846f42d9244aaa3c6f09d22c90, type: 3}
+      propertyPath: m_Color.a
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7576911950510997017, guid: 8c48b2846f42d9244aaa3c6f09d22c90, type: 3}
+      propertyPath: m_Color.a
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 7576911950510997022, guid: 8c48b2846f42d9244aaa3c6f09d22c90, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
       value: 
@@ -18352,6 +18401,10 @@ PrefabInstance:
     - target: {fileID: 7576911950510997022, guid: 8c48b2846f42d9244aaa3c6f09d22c90, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_TargetAssemblyTypeName
       value: ReplayManager, Assembly-CSharp
+      objectReference: {fileID: 0}
+    - target: {fileID: 7576911951111901368, guid: 8c48b2846f42d9244aaa3c6f09d22c90, type: 3}
+      propertyPath: m_Color.a
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 7576911951111901369, guid: 8c48b2846f42d9244aaa3c6f09d22c90, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
