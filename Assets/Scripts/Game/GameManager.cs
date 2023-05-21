@@ -313,6 +313,12 @@ public class GameManager : MonoBehaviour
     }
     public void GameOver()
     {
+
+        if (SceneManager.GetActiveScene().buildIndex == 5)
+        {
+            MobileInputPanel.gameObject.SetActive(true);
+        }
+
         gameState = GameStates.GameOver;
         
         // Set Animator UpdateMode to UnscaledTime inorder to play dance animation.
@@ -561,6 +567,12 @@ public class GameManager : MonoBehaviour
         Time.timeScale = 1.0f;
 
         gameState = GameStates.InGame;
+
+
+        if (SceneManager.GetActiveScene().buildIndex == 5)
+        {
+            MobileInputPanel.gameObject.SetActive(true);
+        }
     }
 
     // Pause Panel
