@@ -497,6 +497,10 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 1987802229}
     m_Modifications:
+    - target: {fileID: 1024358488175210782, guid: a3f91a217b86bf84cb042c7356917553, type: 3}
+      propertyPath: m_Name
+      value: SinglePlayerMobileText
+      objectReference: {fileID: 0}
     - target: {fileID: 1095350780095192166, guid: a3f91a217b86bf84cb042c7356917553, type: 3}
       propertyPath: m_AnchorMax.y
       value: 1
@@ -2067,6 +2071,7 @@ MonoBehaviour:
   settingsData:
     lastUpdated: 0
     tutorial: 1
+    singleplayerMobile: 1
     MasterVolume: 1
     MusicVolume: 1
     SoundVolume: 1
