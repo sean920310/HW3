@@ -109,7 +109,7 @@ public class BallManager : MonoBehaviour, IPunObservable
         {
             ServeDirection = new Vector2(Mathf.Abs(ServeDirection.x), Mathf.Abs(ServeDirection.y));
             if (pv)
-                pv.RPC("RpcBallAddForce", RpcTarget.MasterClient, (Vector3)ServeDirection.normalized * ServeForce);
+                pv.RPC("RpcBallAddForceWithPos", RpcTarget.MasterClient, (Vector3)ServeDirection.normalized * ServeForce, transform.position);
             else
                 rb.AddForce( ServeDirection.normalized * ServeForce, ForceMode.Impulse);
         }
@@ -117,7 +117,7 @@ public class BallManager : MonoBehaviour, IPunObservable
         {
             ServeDirection = new Vector2(-Mathf.Abs(ServeDirection.x), Mathf.Abs(ServeDirection.y));
             if (pv)
-                pv.RPC("RpcBallAddForce", RpcTarget.MasterClient, (Vector3)ServeDirection.normalized * ServeForce);
+                pv.RPC("RpcBallAddForceWithPos", RpcTarget.MasterClient, (Vector3)ServeDirection.normalized * ServeForce, transform.position);
             else
                 rb.AddForce( ServeDirection.normalized * ServeForce, ForceMode.Impulse);
 
@@ -194,7 +194,7 @@ public class BallManager : MonoBehaviour, IPunObservable
 
                     if(pv)
                     {
-                        pv.RPC("RpcBallAddForce", RpcTarget.MasterClient, racketManager.transform.up.normalized * racketManager.defenceHitForce);
+                        pv.RPC("RpcBallAddForceWithPos", RpcTarget.MasterClient, racketManager.transform.up.normalized * racketManager.defenceHitForce, transform.position);
                         PhotonNetwork.SendAllOutgoingCommands();
                     }
                     else
@@ -223,7 +223,7 @@ public class BallManager : MonoBehaviour, IPunObservable
 
                     if (pv)
                     {
-                        pv.RPC("RpcBallAddForce", RpcTarget.MasterClient, racketManager.transform.up.normalized * racketManager.swinDownForce);
+                        pv.RPC("RpcBallAddForceWithPos", RpcTarget.MasterClient, racketManager.transform.up.normalized * racketManager.swinDownForce, transform.position);
                         PhotonNetwork.SendAllOutgoingCommands();
                     }
                     else
@@ -249,7 +249,7 @@ public class BallManager : MonoBehaviour, IPunObservable
 
                     if (pv)
                     {
-                        pv.RPC("RpcBallAddForce", RpcTarget.MasterClient, (-racketManager.transform.up.normalized) * racketManager.powerHitForce);
+                        pv.RPC("RpcBallAddForceWithPos", RpcTarget.MasterClient, (-racketManager.transform.up.normalized) * racketManager.powerHitForce, transform.position);
                         PhotonNetwork.SendAllOutgoingCommands();
                     }
                     else
@@ -288,7 +288,7 @@ public class BallManager : MonoBehaviour, IPunObservable
 
                         if (pv)
                         {
-                            pv.RPC("RpcBallAddForce", RpcTarget.MasterClient, -racketManager.transform.up.normalized * racketManager.defenceHitForce);
+                            pv.RPC("RpcBallAddForceWithPos", RpcTarget.MasterClient, -racketManager.transform.up.normalized * racketManager.defenceHitForce, transform.position);
                             PhotonNetwork.SendAllOutgoingCommands();
                         }
                         else
@@ -317,7 +317,7 @@ public class BallManager : MonoBehaviour, IPunObservable
 
                         if (pv)
                         {
-                            pv.RPC("RpcBallAddForce", RpcTarget.MasterClient, -racketManager.transform.up.normalized * racketManager.hitForce);
+                            pv.RPC("RpcBallAddForceWithPos", RpcTarget.MasterClient, -racketManager.transform.up.normalized * racketManager.hitForce, transform.position);
                             PhotonNetwork.SendAllOutgoingCommands();
                         }
                         else
@@ -432,6 +432,13 @@ public class BallManager : MonoBehaviour, IPunObservable
     [PunRPC]
     void RpcBallAddForce(Vector3 force, PhotonMessageInfo info)
     {
+        rb.AddForce(force, ForceMode.Impulse);
+    }
+
+    [PunRPC]
+    void RpcBallAddForceWithPos(Vector3 force, Vector3 position, PhotonMessageInfo info)
+    {
+        rb.transform.position = position;
         rb.AddForce(force, ForceMode.Impulse);
     }
 
