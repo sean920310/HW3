@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using TMPro;
 using Unity.VisualScripting.Antlr3.Runtime;
 using UnityEngine;
+using Photon.Pun;
 
 public class MultiplayerMenuManager : MonoBehaviour, ISettingsDataPersistence
 {
@@ -29,6 +30,8 @@ public class MultiplayerMenuManager : MonoBehaviour, ISettingsDataPersistence
     [SerializeField] private GameObject SettingsPanel;
     [SerializeField] private MultiplayerSettings MultiplayerSetting;
 
+    [SerializeField] private TextMeshProUGUI onlinePlayerText;
+
     [SerializeField] private LoadingScene loadingScene;
 
     [SerializeField] private const MenuStates defaultState = MenuStates.Multiplayer;
@@ -47,6 +50,8 @@ public class MultiplayerMenuManager : MonoBehaviour, ISettingsDataPersistence
         RoomCreatePanel.SetActive(getState(MenuStates.RoomCreate));
         RoomPanel.SetActive(getState(MenuStates.Room));
         SettingsPanel.SetActive(getState(MenuStates.Settings));
+
+        onlinePlayerCountsUpdate();
     }
 
     private void OnDestroy()
@@ -93,6 +98,13 @@ public class MultiplayerMenuManager : MonoBehaviour, ISettingsDataPersistence
     {
         Photon.Pun.PhotonNetwork.NickName = playername;
     }
+
+    public void onlinePlayerCountsUpdate()
+    {
+        onlinePlayerText.text = "Online Player: " + PhotonNetwork.CountOfPlayers.ToString();
+    }
+
+
 
     public void onNameSetSubmit()
     {
