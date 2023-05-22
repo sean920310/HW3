@@ -718,7 +718,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_SynchronizeVelocity: 1
   m_SynchronizeAngularVelocity: 1
-  m_TeleportEnabled: 1
+  m_TeleportEnabled: 0
   m_TeleportIfDistanceGreaterThan: 3
 --- !u!1 &2636365398623167367
 GameObject:

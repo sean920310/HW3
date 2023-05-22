@@ -617,11 +617,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2582724395849564969, guid: 9e2eed9e40515104c849495e5e39059b, type: 3}
       propertyPath: m_ActionEvents.Array.data[8].m_ActionId
-      value: 94beb159-5d96-47d8-ad51-1095f5561120
+      value: 8a0ffbbe-e09c-4022-8c52-6d068bdd4cb7
       objectReference: {fileID: 0}
     - target: {fileID: 2582724395849564969, guid: 9e2eed9e40515104c849495e5e39059b, type: 3}
       propertyPath: m_ActionEvents.Array.data[8].m_ActionName
-      value: MultiPlayer/New action
+      value: PlayerRebinding/New action
       objectReference: {fileID: 0}
     - target: {fileID: 2582724395849564969, guid: 9e2eed9e40515104c849495e5e39059b, type: 3}
       propertyPath: m_ActionEvents.Array.data[4].m_PersistentCalls.m_Calls.Array.size
@@ -1323,8 +1323,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_SynchronizeVelocity: 1
-  m_SynchronizeAngularVelocity: 1
-  m_TeleportEnabled: 1
+  m_SynchronizeAngularVelocity: 0
+  m_TeleportEnabled: 0
   m_TeleportIfDistanceGreaterThan: 3
 --- !u!114 &-485562986669569540
 MonoBehaviour:
