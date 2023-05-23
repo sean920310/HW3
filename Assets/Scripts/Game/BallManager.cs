@@ -47,6 +47,7 @@ public class BallManager : MonoBehaviour, IPunObservable
     public bool BallInLeftSide { get; private set; }
 
     private PhotonView pv;
+    private float lastNetworkTimestamp;
 
     public BallManager()
     {
@@ -197,8 +198,10 @@ public class BallManager : MonoBehaviour, IPunObservable
                         pv.RPC("RpcBallAddForceWithPos", RpcTarget.MasterClient, racketManager.transform.up.normalized * racketManager.defenceHitForce, transform.position);
                         PhotonNetwork.SendAllOutgoingCommands();
                     }
-                    else
+                    if (!pv || pv && !PhotonNetwork.IsMasterClient)
+                    {
                         rb.AddForce(racketManager.transform.up.normalized * racketManager.defenceHitForce, ForceMode.Impulse);
+                    }
 
                     if (racketManager.transform.root.name == "Player1")
                         p1StatesPanel.ShowMessageLeft("Defence!!!");
@@ -226,8 +229,10 @@ public class BallManager : MonoBehaviour, IPunObservable
                         pv.RPC("RpcBallAddForceWithPos", RpcTarget.MasterClient, racketManager.transform.up.normalized * racketManager.swinDownForce, transform.position);
                         PhotonNetwork.SendAllOutgoingCommands();
                     }
-                    else
+                    if (!pv || pv && !PhotonNetwork.IsMasterClient)
+                    {
                         rb.AddForce(racketManager.transform.up.normalized * racketManager.swinDownForce, ForceMode.Impulse);
+                    }
 
                     if (pv)
                         pv.RPC("RpcNormalHit", RpcTarget.All);
@@ -252,8 +257,10 @@ public class BallManager : MonoBehaviour, IPunObservable
                         pv.RPC("RpcBallAddForceWithPos", RpcTarget.MasterClient, (-racketManager.transform.up.normalized) * racketManager.powerHitForce, transform.position);
                         PhotonNetwork.SendAllOutgoingCommands();
                     }
-                    else
+                    if (!pv || pv && !PhotonNetwork.IsMasterClient)
+                    {
                         rb.AddForce((-racketManager.transform.up.normalized) * racketManager.powerHitForce, ForceMode.Impulse);
+                    }
 
                     if (racketManager.transform.root.name == "Player1")
                         p1StatesPanel.ShowMessageLeft("Smash!!!");
@@ -291,8 +298,10 @@ public class BallManager : MonoBehaviour, IPunObservable
                             pv.RPC("RpcBallAddForceWithPos", RpcTarget.MasterClient, -racketManager.transform.up.normalized * racketManager.defenceHitForce, transform.position);
                             PhotonNetwork.SendAllOutgoingCommands();
                         }
-                        else
+                        if (!pv || pv && !PhotonNetwork.IsMasterClient)
+                        {
                             rb.AddForce(-racketManager.transform.up.normalized * racketManager.defenceHitForce, ForceMode.Impulse);
+                        }
 
                         if (racketManager.transform.root.name == "Player1")
                             p1StatesPanel.ShowMessageLeft("Defence!!!");
@@ -320,8 +329,10 @@ public class BallManager : MonoBehaviour, IPunObservable
                             pv.RPC("RpcBallAddForceWithPos", RpcTarget.MasterClient, -racketManager.transform.up.normalized * racketManager.hitForce, transform.position);
                             PhotonNetwork.SendAllOutgoingCommands();
                         }
-                        else
+                        if (!pv || pv && !PhotonNetwork.IsMasterClient)
+                        {
                             rb.AddForce(-racketManager.transform.up.normalized * racketManager.hitForce, ForceMode.Impulse);
+                        }
 
                         if (pv)
                             pv.RPC("RpcNormalHit", RpcTarget.All);
@@ -342,6 +353,14 @@ public class BallManager : MonoBehaviour, IPunObservable
             {
                 trailRenderer.enabled = true;
                 HitParticle.Play();
+            }
+
+            // disable trailRenderer when client first hit the ball,
+            // because position will update whenever RPC to master, it will cause thunder-like trail.
+            if (pv && !PhotonNetwork.IsMasterClient)
+            {
+                trailRenderer.Clear();
+                trailRenderer.enabled = false;
             }
 
             if (pv && !PhotonManager.Instance.OneSideLeave())
@@ -401,17 +420,21 @@ public class BallManager : MonoBehaviour, IPunObservable
         if (stream.IsWriting)
         {
             stream.SendNext(rb.position);
-            stream.SendNext(rb.rotation);
+            //stream.SendNext(rb.rotation);
             stream.SendNext(rb.velocity);
+            stream.SendNext((float)PhotonNetwork.Time);
+            
         }
         else
         {
             rb.position = (Vector3)stream.ReceiveNext();
-            rb.rotation = (Quaternion)stream.ReceiveNext();
+            //rb.rotation = (Quaternion)stream.ReceiveNext();
             rb.velocity = (Vector3)stream.ReceiveNext();
+            lastNetworkTimestamp = (float)stream.ReceiveNext();
 
-            float lag = Mathf.Abs((float)(PhotonNetwork.Time - info.timestamp));
-            rb.position += rb.velocity * (1 - lag * rb.drag);
+            float lag = Mathf.Abs((float)(PhotonNetwork.Time - lastNetworkTimestamp));
+            rb.velocity = rb.velocity * (1 - lag * rb.drag);
+            //rb.position += rb.velocity * lag;
         }
     }
 
@@ -440,6 +463,15 @@ public class BallManager : MonoBehaviour, IPunObservable
     {
         rb.transform.position = position;
         rb.AddForce(force, ForceMode.Impulse);
+
+        pv.RPC("RpcTrailRendererOn", RpcTarget.All);
+    }
+
+    [PunRPC]
+    void RpcTrailRendererOn(PhotonMessageInfo info)
+    {
+        trailRenderer.Clear();
+        trailRenderer.enabled = true;
     }
 
     [PunRPC]

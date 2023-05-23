@@ -18,6 +18,7 @@ public class GameManager : MonoBehaviour
         Replaying,
         GameOver,
     }
+
     public enum Players
     {
         Player1,
