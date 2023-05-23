@@ -135,8 +135,8 @@ public class TutorialManager : MonoBehaviour
     {
         resetAllFlag();
 
-        RemoveMessageBoxItemUI();
-        SpawnMessageBox(messageBoxList[messageBoxIdx].messageBoxData);
+        //RemoveMessageBoxItemUI();
+        //SpawnMessageBox(messageBoxList[messageBoxIdx].messageBoxData);
 
         StartCoroutine(WaitAnimationEndedToEnterState());
 
