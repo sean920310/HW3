@@ -89,7 +89,7 @@ public class BotManager : MonoBehaviour
     void Update()
     {
         // Drop Point Compute
-        if(BallManager.Instance && BallManager.Instance.gameObject.active)
+        if(BallManager.Instance && BallManager.Instance.gameObject.activeSelf)
             Physics.Raycast(BallManager.Instance.transform.position, BallManager.Instance.transform.right, out DropPointInfo, 100, whatIsDropPoint);
 
         hitDelayCounter -= Time.deltaTime;

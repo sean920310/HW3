@@ -12,10 +12,16 @@ public class BundleWebLoader : MonoBehaviour
     // Start is called before the first frame update
     IEnumerator Start()
     {
-        using (WWW web = new WWW(bundleUrl))
+        UnityWebRequest www = UnityWebRequestAssetBundle.GetAssetBundle(bundleUrl);
+        yield return www.SendWebRequest();
+
+        if (www.result != UnityWebRequest.Result.Success)
         {
-            yield return web;
-            AssetBundle remoteAssetBundle = web.assetBundle;
+            Debug.Log(www.error);
+        }
+        else
+        {
+            AssetBundle remoteAssetBundle = DownloadHandlerAssetBundle.GetContent(www);
             if (remoteAssetBundle == null)
             {
                 Debug.LogWarning("Failed to download AssetBundle! " + bundleUrl);
